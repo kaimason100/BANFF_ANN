@@ -1,0 +1,8 @@
+# MATLAB live scripts and data/doc containers are binary.
+*.mlx binary
+*.mat binary
+*.fig binary
+*.docx binary
+*.xlsx binary
+
+# Do not force line-ending conversion for source files.

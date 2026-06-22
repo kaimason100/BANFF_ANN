@@ -1,0 +1,27 @@
+# macOS/editor metadata
+.DS_Store
+**/.DS_Store
+*.asv
+*.autosave
+
+# Generated outputs and saved models
+Feedforward_network/**/outputs/
+Feedforward_network/**/trained_networks/
+
+# Local datasets and large generated publication artifacts
+Feedforward_network/**/data/*.mat
+Feedforward_network/publication/plots/*.mat
+Feedforward_network/publication/plots/*.mp4
+Feedforward_network/publication/plots/*.gif
+Feedforward_network/publication/plots/*.avi
+Feedforward_network/publication/plots/*.fig
+Feedforward_network/publication/plots/*.png
+Feedforward_network/publication/plots/*.jpg
+
+# Packaged zip files and local release bundles
+*.zip
+
+# MATLAB cache/build-like files
+*.mex*
+slprj/
+codegen/
