@@ -24,7 +24,9 @@ publication initial learning rate was `0.01` except for `MO5` seed `3`, `MO13`
 seed `3`, `MO7` seed `8`, and `Rikitake` seeds `0` and `4`, which used
 learning rate `0.005`. Continuation training is available with learning rate
 `0.001`; the publication continuation run used all `MO0` seeds for `50000`
-extra epochs and saves to a separate continuation network set.
+extra epochs and saves to a separate continuation network set. The local
+continuation wrapper keeps the broader ARC-used editable continuation-pair list
+so those reruns can be reproduced without changing the trainer.
 Local scripts show live plots where applicable.
 
 ## Other seeded workflows

@@ -121,7 +121,9 @@ Publication DS learning-rate schedule:
   `MO5` seed `3`, `MO13` seed `3`, `MO7` seed `8`, and `Rikitake` seeds `0`
   and `4`, which used learning rate `0.005`.
 - All `MO0` seeds `0:9` were then continued for an extra `50000` epochs with
-  learning rate `0.001`.
+  learning rate `0.001`. The local continuation script keeps the broader
+  ARC-used editable continuation list so underperforming task/seed pairs can be
+  reproduced without changing the training implementation.
 
 Use `train_dynamical_systems_seeded_state_random_derivative_ode45.mlx` for the
 standard `0.01` batch, `train_dynamical_system_single_seed_state_random_derivative_ode45.mlx`

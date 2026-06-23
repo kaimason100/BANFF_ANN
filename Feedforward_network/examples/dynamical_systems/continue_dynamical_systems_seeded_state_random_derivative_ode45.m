@@ -12,9 +12,24 @@ addpath(genpath(fullfile(repoRoot, 'examples')));
 set(0, 'DefaultFigureVisible', 'on');
 
 % Edit this list to choose the exact networks to continue locally.
-% Rows are {taskName, seed}.
+% Rows are {taskName, seed}. The default list mirrors the ARC-used
+% continuation wrapper preserved in arc_rate_networks.
 continuationPairs = {
-    'Lorenz', 5
+    'MO0', 0
+    'MO0', 1
+    'MO0', 2
+    'MO0', 3
+    'MO0', 4
+    'MO0', 5
+    'MO0', 6
+    'MO0', 7
+    'MO0', 8
+    'MO0', 9
+    'MO7', 8
+    'Rikitake', 0
+    'Rikitake', 4
+    'Rikitake', 5
+    'Rikitake', 6
     };
 
 % Extra epochs for the continuation stage.

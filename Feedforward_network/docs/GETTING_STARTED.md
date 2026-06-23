@@ -306,12 +306,19 @@ continuationPairs = {
     'MO0', 7
     'MO0', 8
     'MO0', 9
+    'MO7', 8
+    'Rikitake', 0
+    'Rikitake', 4
+    'Rikitake', 5
+    'Rikitake', 6
     };
 ```
 
-The publication continuation stage was run for all `MO0` seeds only: `50000`
-extra epochs with learning rate `0.001`. The local continuation default is
-`50000` extra epochs unless you edit `CONTINUATION_EPOCHS`.
+The local continuation default mirrors the ARC-used continuation wrapper
+preserved in `arc_rate_networks`. The previously specified publication
+continuation stage was all `MO0` seeds for `50000` extra epochs with learning
+rate `0.001`; leave or edit `continuationPairs` according to which saved
+continuation networks you want to reproduce.
 
 Active task rows from `dynamics_list.xlsx`:
 
