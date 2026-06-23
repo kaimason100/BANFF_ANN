@@ -58,6 +58,9 @@ Classification:
 - `train_mushroom_seeded.mlx`
 - `train_classification_seeded.mlx` batch runner
 
+These tabular classification scripts train for `1000` epochs with Adam
+learning rate `0.01`.
+
 MNIST-family classification, also under `examples/classification`:
 
 - `train_mnist_seeded.mlx`
@@ -69,11 +72,17 @@ MNIST-family classification, also under `examples/classification`:
 - `train_afro_mnist_vai_seeded.mlx`
 - `train_mnist_family_seeded.mlx` batch runner
 
+These MNIST-family scripts train for `1000` epochs with Adam learning rate
+`0.01`.
+
 Regression:
 
 - `train_abalone_seeded.mlx`
 - `train_toyota_seeded.mlx`
 - `train_regression_seeded.mlx` batch runner
+
+These regression scripts train for `1000` epochs with Adam learning rate
+`0.01`.
 
 Closed-loop tasks:
 
@@ -82,6 +91,9 @@ Closed-loop tasks:
 - `train_dynamical_systems_seeded_state_random_derivative_ode45.mlx`
 - `train_dynamical_system_single_seed_state_random_derivative_ode45.mlx`
 - `continue_dynamical_systems_seeded_state_random_derivative_ode45.mlx`
+
+Pong trains for `20000` epochs with Adam learning rate `0.001`. Motor control
+trains for `10000` epochs with Adam learning rate `0.01`.
 
 The active dynamical-system derivative-field trainer saves to
 `trained_networks/seeded_state_random_derivative_ode45_lr_0p01/<task>` by

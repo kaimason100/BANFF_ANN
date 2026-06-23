@@ -27,6 +27,13 @@ learning rate `0.005`. Continuation training is available with learning rate
 extra epochs and saves to a separate continuation network set.
 Local scripts show live plots where applicable.
 
+## Other seeded workflows
+
+Tabular classification, MNIST-family classification, and regression scripts
+train for `1000` epochs with Adam learning rate `0.01`. Pong trains for
+`20000` epochs with Adam learning rate `0.001`. Motor control trains for
+`10000` epochs with Adam learning rate `0.01`.
+
 ## Testing policy
 
 Active tests load saved seeded networks and do not retrain. They require saved

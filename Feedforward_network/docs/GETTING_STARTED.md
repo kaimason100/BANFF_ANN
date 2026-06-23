@@ -149,6 +149,10 @@ Outputs are saved to:
 trained_networks/seeded/<task>/<task>_seed_<seed>_network.mat
 ```
 
+Tabular classification scripts train for `1000` epochs with Adam learning rate
+`0.01`. MNIST-family scripts also train for `1000` epochs with Adam learning
+rate `0.01`.
+
 ## 6. Regression training
 
 Run both regression tasks:
@@ -173,6 +177,8 @@ Outputs are saved to:
 trained_networks/seeded/<task>/<task>_seed_<seed>_network.mat
 ```
 
+Regression scripts train for `1000` epochs with Adam learning rate `0.01`.
+
 ## 7. Pong training
 
 Run:
@@ -187,6 +193,8 @@ script, then saves seeded networks to:
 ```text
 trained_networks/seeded/pong/pong_seed_<seed>_network.mat
 ```
+
+Pong trains for `20000` epochs with Adam learning rate `0.001`.
 
 The Pong test is closed-loop: it simulates games and counts successful network
 paddle contacts and misses. To play or visualize Pong separately, use:
@@ -209,6 +217,8 @@ networks to:
 ```text
 trained_networks/seeded/motor_control/motor_control_seed_<seed>_network.mat
 ```
+
+Motor control trains for `10000` epochs with Adam learning rate `0.01`.
 
 The test is closed-loop: each saved network controls the arm toward held-out
 targets rather than being evaluated only on precomputed open-loop samples.
