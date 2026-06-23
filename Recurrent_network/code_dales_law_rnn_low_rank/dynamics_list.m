@@ -1,0 +1,1 @@
+dynamics ={'Integrator','rossler','lorenz','Thomas','SprottA','SprottB','SprottC','SprottD','SprottE','SprottF','SprottG','SprottH','SprottI','SprottJ','SprottK','SprottL','SprottM','SprottN','SprottO','SprottP','SprottQ','SprottR','SprottS'};
