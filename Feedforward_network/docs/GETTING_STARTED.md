@@ -490,9 +490,11 @@ the saved network is not in the expected `trained_networks` folder.
 file name does not match the expected name. See `docs/DATASETS.md`.
 
 `Could not locate repository root` usually means MATLAB Live Editor executed the
-script from a temporary folder. For publication plot-data generators, set
-`MANUAL_REPO_ROOT`. For other scripts, run from the repository root or from a
-folder inside the repository.
+script from a temporary folder and MATLAB's current folder is outside the
+downloaded package. The active scripts recognize either the `Feedforward_network`
+folder itself or its parent GitHub checkout. For publication plot-data
+generators, set `MANUAL_REPO_ROOT` if MATLAB still cannot infer the package
+location.
 
 Metadata assertion failures usually mean an older saved network is being tested
 with a newer test script. Regenerate the network with the active seeded training

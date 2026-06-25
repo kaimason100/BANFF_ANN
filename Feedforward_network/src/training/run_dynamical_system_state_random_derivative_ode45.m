@@ -481,8 +481,13 @@ function repoRoot = locateRepoRoot()
     for s = starts
         candidate = char(s);
         while ~isempty(candidate)
-            if isfolder(fullfile(candidate, 'trained_networks')) && isfolder(fullfile(candidate, 'examples'))
+            if isfolder(fullfile(candidate, 'examples')) && isfolder(fullfile(candidate, 'src'))
                 repoRoot = candidate;
+                return
+            end
+            nestedCandidate = fullfile(candidate, 'Feedforward_network');
+            if isfolder(fullfile(nestedCandidate, 'examples')) && isfolder(fullfile(nestedCandidate, 'src'))
+                repoRoot = nestedCandidate;
                 return
             end
             parent = fileparts(candidate);
