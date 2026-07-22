@@ -19,7 +19,9 @@ Required dataset files for a full local run are:
 - `afro_mnist_nko.mat`
 - `afro_mnist_osmanya.mat`
 - `afro_mnist_vai.mat`
-- `LQR_SUPERVISED_EPISODES_20251002_172744.mat`
 
-`fisheriris` is loaded directly from MATLAB. Pong supervised data are generated
-inside the Pong training script.
+`fisheriris` is loaded directly from MATLAB. Pong supervised data and the
+motor-control LQR episodes are generated inside their respective training
+scripts. Motor-control training writes
+`LQR_SUPERVISED_EPISODES_20251002_172744.mat` as a generated compatibility
+artifact; it is not a required input for a clean run.

@@ -18,8 +18,19 @@ Feedforward_network/publication/plots/*.fig
 Feedforward_network/publication/plots/*.png
 Feedforward_network/publication/plots/*.jpg
 
+# The recurrent source package is part of the public release. These explicit
+# inclusions override any broad local excludes when new recurrent scripts are
+# added.
+!Recurrent_network/
+!Recurrent_network/code_dales_law_rnn_low_rank/
+!Recurrent_network/code_dales_law_rnn_low_rank/*.m
+
 # Packaged zip files and local release bundles
 *.zip
+
+# Local review reports and top-level generated working output
+Recurrent_network/Recurrent_Network_Technical_Issues_Report_Amended.docx
+/output/
 
 # MATLAB cache/build-like files
 *.mex*

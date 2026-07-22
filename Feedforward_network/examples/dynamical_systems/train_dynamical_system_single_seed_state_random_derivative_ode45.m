@@ -1,7 +1,7 @@
 %% Train one seeded derivative-field dynamical-system network locally.
 % This single-network wrapper calls the same shared implementation used by
-% the seeded batch trainer. Use it for targeted reruns with a chosen task, seed,
-% learning rate, epoch count, and output network set.
+% the seeded batch trainer. Use it for targeted reruns with a chosen
+% task, seed, learning rate, epoch count, and output network set.
 
 clear; close all; clc;
 

@@ -121,9 +121,8 @@ Publication DS learning-rate schedule:
   `MO5` seed `3`, `MO13` seed `3`, `MO7` seed `8`, and `Rikitake` seeds `0`
   and `4`, which used learning rate `0.005`.
 - All `MO0` seeds `0:9` were then continued for an extra `50000` epochs with
-  learning rate `0.001`. The local continuation script keeps the broader
-  ARC-used editable continuation list so underperforming task/seed pairs can be
-  reproduced without changing the training implementation.
+  learning rate `0.001`. These ten MO0 networks are the default entries in the
+  editable local continuation list.
 
 Use `train_dynamical_systems_seeded_state_random_derivative_ode45.mlx` for the
 standard `0.01` batch, `train_dynamical_system_single_seed_state_random_derivative_ode45.mlx`
@@ -135,7 +134,20 @@ Continuation training loads selected derivative-field networks and continues
 bias-only training with learning rate `0.001`, saving to a continuation network
 set such as
 `trained_networks/seeded_state_random_derivative_ode45_continued_lr_0p001_extra_50000/<task>`.
-Local scripts keep live plots visible where applicable.
+The selected learned network parameters are retained, but Adam's moment
+estimates and iteration counter restart for this new optimizer phase. Local
+scripts keep live plots visible where applicable.
+
+## Input preprocessing
+
+All data-derived normalization statistics are fitted using training data only.
+Tabular classification, regression, and motor-control predictors are z-scored
+with training statistics and then divided by the square root of the predictor
+count. MNIST-family images are standardized per pixel using the training images
+and divided by `sqrt(784)`. Pong uses its task-specific generated features
+without that generic scaling, while dynamical systems use the reference-state
+normalization saved with each network. Tests reuse the saved training-fitted
+statistics and never refit preprocessing on validation or test data.
 
 ## Reproducibility notes
 
@@ -164,7 +176,9 @@ following `docs/DATASETS.md` and then run the active seeded scripts.
 
 ## Running tests
 
-Run active seeded tests from the repository root or any subfolder:
+Set the MATLAB current folder to `Feedforward_network`, then run the active
+seeded tests. Individual scripts also contain root-location helpers so they can
+normally be launched from elsewhere in the release.
 
 ```matlab
 run("tests/run_all_seeded_tests.mlx")

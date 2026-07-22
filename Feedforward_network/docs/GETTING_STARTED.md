@@ -15,9 +15,11 @@ excluded from normal commits.
 
 ## 1. Software requirements
 
-Use MATLAB with the Deep Learning Toolbox and Statistics and Machine Learning
-Toolbox. Newer MATLAB versions should run the local scripts, but small numerical
-differences can occur across MATLAB versions, operating systems, CPUs, and GPUs.
+Use MATLAB R2023a or later with Deep Learning Toolbox and Statistics and Machine
+Learning Toolbox. MNIST-family image preparation uses Image Processing Toolbox,
+and the two-joint arm task requires Control System Toolbox for `lqr`. A supported
+GPU is optional. Small numerical differences can occur across MATLAB versions,
+operating systems, CPUs, and GPUs.
 
 The scripts are MATLAB live scripts (`.mlx`). They can be opened in Live Editor
 or run from the command window with `run(...)`.
@@ -25,14 +27,14 @@ or run from the command window with `run(...)`.
 Recommended local workflow:
 
 ```matlab
-cd "path/to/GitHub"
+cd "path/to/BANFF_ANN/Feedforward_network"
 run("tests/run_all_seeded_tests.mlx")
 ```
 
-The scripts try to locate the repository root automatically, so they can usually
+The scripts try to locate the feedforward package root automatically, so they can usually
 be run from any folder. If a publication plot-data generator says it cannot find
-the repository root, set `MANUAL_REPO_ROOT` at the top of that generator to the
-absolute path of this repository.
+the package root, set `MANUAL_REPO_ROOT` at the top of that generator to the
+absolute path of `Feedforward_network` or its parent repository folder.
 
 ## 2. Folder map
 
@@ -58,7 +60,8 @@ absolute path of this repository.
 1. Put the repository somewhere MATLAB can access.
 2. Put required dataset files in `data`. See `docs/DATASETS.md` for exact file
    names, variable names, and expected array shapes.
-3. Open MATLAB and set the current folder to the repository root.
+3. Open MATLAB and set the current folder to `Feedforward_network`, not the
+   top-level folder that contains both network packages.
 4. Run a quick path/root check:
 
 ```matlab
@@ -67,6 +70,13 @@ run("tests/check_seeded_network_weight_consistency.mlx")
 
 This check requires saved networks. If you have not trained anything yet, it may
 fail because the artifacts are missing. That is expected before training.
+
+Preprocessing is performed inside the trainers. Tabular classification,
+regression, and motor-control predictors are standardized from training data
+and divided by the square root of the predictor count. MNIST-family images use
+training-only per-pixel statistics followed by division by `sqrt(784)`. Pong
+uses its generated task features directly, and dynamical systems use their
+saved reference-state normalization. Do not pre-normalize complete datasets.
 
 ## 4. Training order
 
@@ -168,8 +178,9 @@ run("examples/regression/train_abalone_seeded.mlx")
 run("examples/regression/train_toyota_seeded.mlx")
 ```
 
-Regression tests report only aggregate RMSE, Pearson `r`, and Pearson p-value
-as mean and SD across seeds.
+Regression tests report aggregate RMSE, Pearson `r`, and Pearson p-value as
+mean and SD across seeds. The mean p-value is a descriptive summary of the
+per-seed tests, not a formal combined-significance test.
 
 Outputs are saved to:
 
@@ -306,19 +317,15 @@ continuationPairs = {
     'MO0', 7
     'MO0', 8
     'MO0', 9
-    'MO7', 8
-    'Rikitake', 0
-    'Rikitake', 4
-    'Rikitake', 5
-    'Rikitake', 6
     };
 ```
 
-The local continuation default mirrors the ARC-used continuation wrapper
-preserved in `arc_rate_networks`. The previously specified publication
-continuation stage was all `MO0` seeds for `50000` extra epochs with learning
-rate `0.001`; leave or edit `continuationPairs` according to which saved
-continuation networks you want to reproduce.
+The publication continuation stage was all `MO0` seeds for `50000` extra
+epochs with learning rate `0.001`, which is the local script's default. Edit
+`continuationPairs` only when intentionally continuing a different saved
+network. Continuation starts from the selected saved network parameters but
+starts a new Adam optimizer phase: the first- and second-moment estimates and
+iteration counter are not restored from the initial run.
 
 Active task rows from `dynamics_list.xlsx`:
 
@@ -403,19 +410,25 @@ hard checks for:
 At the top of the DS derivative-field test, you can change:
 
 ```matlab
-CLOSED_LOOP_ROLLOUT_LENGTH = 1000;
+CLOSED_LOOP_ROLLOUT_LENGTH = 5000;
 ODE_OUTPUT_DT = 0.01;
 TEST_IC_RANDOM_SEED = 9100;
-TEST_IC_PERTURBATION_SCALE = 0;
+TEST_IC_PERTURBATION_SCALE = 0.01;
 USE_CONTINUATION_IF_AVAILABLE = true;
 CONTINUATION_NETWORK_SETS = "auto";
 ```
 
 `CLOSED_LOOP_ROLLOUT_LENGTH` is the physical time interval integrated by
 `ode45`. `ODE_OUTPUT_DT` is the requested output grid, not a fixed-step
-integrator. With `USE_CONTINUATION_IF_AVAILABLE = true`, the test scans for
+integrator. The default test IC is the spreadsheet IC after training-derived
+standardisation plus an independent uniform perturbation in
+`[-0.01, 0.01]` in each standardized coordinate. The fixed seed makes that
+IC identical across weight seeds for a task. With
+`USE_CONTINUATION_IF_AVAILABLE = true`, the test scans for
 matching continuation networks and uses them automatically before falling back
-to the base derivative-field network.
+to the base derivative-field network. This perturbation controls final testing
+and publication plot-data generation only; it does not alter the fixed
+training or validation samples used to select network parameters.
 
 ## 12. Weight consistency checks
 
@@ -457,7 +470,7 @@ run("publication/plot_data_generation/generate_bias_histogram_plot_data.mlx")
 Important generator settings:
 
 - `USE_SEEDED_NETWORKS = true` loads a seeded network.
-- `SEED = 0` chooses which seeded network to use.
+- `SEED = 9` chooses the representative seeded network used by the publication generators.
 - `USE_SEEDED_NETWORKS = false` loads older single-network artifacts, if they
   are present.
 - `FORCE_REGENERATE = false` keeps existing plot-data files.
@@ -467,6 +480,8 @@ Important generator settings:
   the base seeded derivative network set, and
   `USE_CONTINUATION_IF_AVAILABLE = true` lets the generator use a matching
   continuation network when one exists.
+- Dynamical-system publication trajectories use a common span of `[0 5000]`
+  time units, including Lorenz.
 - `CLOSED_LOOP_OUTPUT_DT = []` leaves dynamical-system plot-data generation on
   adaptive ode45 output rows. Set it to a positive scalar only when you
   intentionally want a fixed plotting output grid.
@@ -494,7 +509,8 @@ script from a temporary folder and MATLAB's current folder is outside the
 downloaded package. The active scripts recognize either the `Feedforward_network`
 folder itself or its parent GitHub checkout. For publication plot-data
 generators, set `MANUAL_REPO_ROOT` if MATLAB still cannot infer the package
-location.
+location; use the absolute path of `Feedforward_network` or its parent
+repository folder.
 
 Metadata assertion failures usually mean an older saved network is being tested
 with a newer test script. Regenerate the network with the active seeded training

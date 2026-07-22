@@ -1,31 +1,51 @@
-# Project Layout
+# BANFF Neural-Network Experiments
 
-This repository contains two MATLAB code packages:
+MATLAB code accompanying *Rapidly Reconfigurable Dynamic Computing in Neural
+Networks with Fixed Synaptic Connectivity*. BANFF networks retain fixed
+synaptic weights and learn task-specific neuronal biases.
 
-- `Feedforward_network` contains the seeded non-spiking feedforward/rate-network
-  package, including training scripts, tests, publication plotting scripts,
-  source helpers, and documentation.
-- `Recurrent_network` contains the low-rank/Dale RNN reference implementation
-  used for comparison with the derivative-field dynamical-system workflow.
+The repository has two independent packages:
 
-The code files themselves were moved without changing their MATLAB
-implementation. Start with `Feedforward_network/README.md` for the active
-feedforward package and `Recurrent_network/README.md` for the recurrent code.
+- `Feedforward_network` contains the seeded feedforward experiments for
+  classification, regression, autonomous dynamical systems, Pong, and
+  two-joint motor control.
+- `Recurrent_network` contains the low-rank recurrent experiments, including
+  multisystem learning, bias switching, representational drift, and the
+  Dale-constrained network.
 
-## GitHub Scope
+Start with the README inside the package you intend to run. Feedforward users
+should then follow `Feedforward_network/docs/GETTING_STARTED.md` and
+`Feedforward_network/docs/DATASETS.md` in order.
 
-The GitHub release includes the active code and documentation in
-`Feedforward_network` and `Recurrent_network`.
+## Publication
 
-Generated outputs, trained networks, local dataset MAT files, publication
-plot-data MAT files, videos, and zip files are also ignored so
-the repository remains code-focused and reproducible from source.
+The public preprint is available at
+[bioRxiv 10.1101/2025.10.05.680523v1](https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract).
+Please cite the journal article when its final bibliographic record is
+available; the repository citation metadata retains the preprint link for
+traceability.
 
-## Partner Publication
+## Repository Scope
 
-This software accompanies a partner bioRxiv preprint:
+GitHub contains source code and documentation. Trained networks, source dataset
+MAT files, generated results, publication plot-data MAT files, figures, videos,
+and local compute-environment packages are intentionally excluded. These files
+must be generated or supplied locally as described in the package documentation.
 
-[bioRxiv 10.1101/2025.10.05.680523v1](https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract)
+## Reproducibility
 
-Please cite the linked preprint when using this code for publication-related
-analyses, alongside any repository citation information provided by the authors.
+All explicit random seeds, dataset splits, and train-fitted preprocessing
+statistics are fixed. Exact bitwise equality across operating systems, MATLAB
+versions, CPUs, and GPUs is not guaranteed because floating-point kernels and
+adaptive ODE integration may differ. Long chaotic rollouts can amplify those
+small differences. Compare saved parameters directly when checking
+initialisation, and use aggregate task metrics from a controlled environment
+for publication comparisons.
+
+## Requirements
+
+The release targets MATLAB R2023a or later. Feedforward experiments require the
+Deep Learning Toolbox and Statistics and Machine Learning Toolbox. MNIST-family
+image preparation uses Image Processing Toolbox functions, and the two-joint
+arm task requires Control System Toolbox. A supported GPU is optional. Recurrent
+experiments use standard MATLAB numerical solvers and the supplied source files.

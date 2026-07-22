@@ -1,15 +1,17 @@
-clear all
+clearvars
 close all
 clc
 tic
-%%
-net_config %confiure initial network. 
-epsilon = 0.2e-1; %gradient descent rate. 
-no = 3*10^5; %number of iterates in gradient descent. 
+%% Train the standard recurrent BANFF network used for Figure 2.
+% net_config creates the fixed N=6000 network used across all systems.
+net_config
+epsilon = 0.1;
+no = 3*10^5;
 %% Run a simulation of the unscaled dynamical system to determine rescaling onto the unit cube. 
 load network_configuration.mat
 k0 = size(phi,2);
-for learn_sys =1:40
+SYSTEM_ROWS = 1:min(40, nsys);
+for learn_sys = SYSTEM_ROWS
 
 %% generate training points. 
 x = 2*rand(k0,nx)-1;   %random sample points across space for training. 
@@ -19,7 +21,7 @@ cv = 2*rand(1,100)-1;
 
 dt = 1e-2;    
 k = dim(learn_sys);
-bias0 = randn(N,1);% reinitialize the bias current.     
+bias0 = randn(N,1); % Reinitialise the task-specific bias current.
 y0 =  ic(learn_sys,1:k)';
 Ts = 1000; %sample time to determine how to scale dynamics onto unit cube.
 ns = round(Ts/dt);
@@ -94,13 +96,13 @@ title(dynamics{learn_sys})
 f2 = figure(learn_sys*10);
 set(f2,'position',[0,0,2000,1000])
 print(f2,sprintf('net_%s.jpg',dynamics{learn_sys}),'-djpeg','-r300')
+if k>=2
 f3 = figure(learn_sys*100);
 subplot(1,2,1)
 plot(y1(:,1),y1(:,2))
 xlim([-1.1,1.1])
 ylim([-1.1,1.1])
 title('Network')
-if k>=2
 subplot(1,2,2)
 plot(y(:,1),y(:,2))
 xlim([-1.1,1.1])

@@ -24,9 +24,10 @@ publication initial learning rate was `0.01` except for `MO5` seed `3`, `MO13`
 seed `3`, `MO7` seed `8`, and `Rikitake` seeds `0` and `4`, which used
 learning rate `0.005`. Continuation training is available with learning rate
 `0.001`; the publication continuation run used all `MO0` seeds for `50000`
-extra epochs and saves to a separate continuation network set. The local
-continuation wrapper keeps the broader ARC-used editable continuation-pair list
-so those reruns can be reproduced without changing the trainer.
+extra epochs and saves to a separate continuation network set. Those ten MO0
+networks are the local continuation wrapper's defaults. Continuation retains
+the selected network parameters but starts a new Adam optimizer phase without
+restoring the original moment estimates or iteration counter.
 Local scripts show live plots where applicable.
 
 ## Other seeded workflows
@@ -41,7 +42,12 @@ train for `1000` epochs with Adam learning rate `0.01`. Pong trains for
 Active tests load saved seeded networks and do not retrain. They require saved
 split and normalization metadata, use held-out test data, and fail immediately
 if required metadata or datasets are missing. Regression tests quote RMSE,
-Pearson `r`, and Pearson p-value as mean and standard deviation across seeds.
+Pearson `r`, and Pearson p-value as mean and standard deviation across seeds;
+the p-value average is descriptive and is not a formal combined-significance
+test. The derivative-field test uses a fixed test-IC seed and a uniform
+standardized perturbation scale of `0.01`, shared across weight seeds within
+each task. This final-test setting is separate from the training and validation
+sample distributions.
 
 ## Reproducibility policy
 

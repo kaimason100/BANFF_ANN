@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated publication."
+title: "Code for Rapidly Reconfigurable Dynamic Computing in Neural Networks with Fixed Synaptic Connectivity"
+type: software
+authors:
+  - family-names: Mason
+    given-names: Kai
+  - family-names: Sennik
+    given-names: Sonia
+  - family-names: Clopath
+    given-names: Claudia
+  - family-names: Gruber
+    given-names: Aaron
+  - family-names: Nicola
+    given-names: Wilten
+repository-code: "https://github.com/kaimason100/BANFF_ANN"
+url: "https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract"
+identifiers:
+  - type: doi
+    value: "10.1101/2025.10.05.680523"
+    description: "Associated bioRxiv preprint"

@@ -1,16 +1,8 @@
-# Recurrent Network Reference Code
+# Recurrent BANFF Networks
 
-This folder contains the recurrent-network side of the repository. The active
-reference implementation is:
+The active recurrent implementation is in `code_dales_law_rnn_low_rank`.
+It reproduces the low-rank recurrent BANFF protocols described in the partner
+manuscript. Open that folder's README for the experiment-to-script map,
+hyperparameters, generated files, and run order.
 
-```text
-code_dales_law_rnn_low_rank
-```
-
-The recurrent code is preserved unchanged as a low-rank/Dale RNN reference for
-comparison with the feedforward derivative-field dynamical-system workflow in
-`../Feedforward_network`.
-
-This repository accompanies the partner bioRxiv preprint:
-
-[bioRxiv 10.1101/2025.10.05.680523v1](https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract)
+The feedforward package is separate and is not called by these scripts.

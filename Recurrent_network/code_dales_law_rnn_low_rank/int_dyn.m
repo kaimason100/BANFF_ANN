@@ -175,18 +175,6 @@ z=X(3,:);
 
 dX(1,:)=-0.2*y;
 dX(2,:)=x+z;
-dX(3,:)=x+y.^2-y;
-dX = dX/TX;
-end
-
-if strcmp(label,'SprottI')
-TX = 10;   
-x=X(1,:);
-y=X(2,:);
-z=X(3,:);
-
-dX(1,:)=-0.2*y;
-dX(2,:)=x+z;
 dX(3,:)=x+y.^2-z;
 dX = dX/TX;
 end
@@ -452,19 +440,6 @@ dX(3,:) = 1-y.^2;
 dX = dX/TX;
 end
 
-
-
-if strcmp(label,'Halvorsen')
-TX  = 10;
-x = X(1,:);
-y = X(2,:);
-z = X(3,:); 
-
-dX(1,:) = -a*x - 4*y - 4*z - y.^2;
-dX(2,:) = -a*y - 4*z - 4*x - z.^2;
-dX(3,:) =  a*z - 4*x - 4*y - x.^2;
-dX = dX/TX;
-end
 
 
 if strcmp(label,'MO0')

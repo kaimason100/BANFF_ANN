@@ -3,14 +3,18 @@
 For the full end-to-end run order, start with `docs/GETTING_STARTED.md`. This
 file focuses only on saved-network tests.
 
-Run active seeded tests from the repository root, `tests`, or any subfolder:
+Set MATLAB's current folder to `Feedforward_network` and run:
 
 ```matlab
 run("tests/run_all_seeded_tests.mlx")
 ```
 
 The active tests load saved seeded artifacts from `trained_networks`; they do
-not retrain networks.
+not retrain networks. Individual test scripts contain package-root discovery
+and can normally also be launched while MATLAB's current folder is elsewhere.
+The aggregate runner also recognizes the top-level two-package repository and
+runs each child test in an isolated workspace, so a child script's `clear`
+command cannot interrupt the remaining tests.
 
 ## Active aggregate tests
 
@@ -37,9 +41,10 @@ The tests assert the relevant saved metadata before reporting metrics:
 - dynamical-system derivative-field metadata matching the active local trainer
 
 Regression tests quote RMSE, Pearson `r`, and Pearson p-value as mean and SD
-across the saved seeds. Classification and MNIST-family tests report accuracy
-across seeds. Closed-loop task tests report task-appropriate closed-loop
-metrics and seed summaries.
+across the saved seeds. The p-value average is a descriptive summary of the
+separate per-seed correlation tests, not a formal combined-significance test.
+Classification and MNIST-family tests report accuracy across seeds. Closed-loop
+task tests report task-appropriate closed-loop metrics and seed summaries.
 
 ## Dynamical systems
 
@@ -56,9 +61,11 @@ integrating the learned continuous-time vector field with `ode45`:
 - sample RNG seed `12345`
 - validation RNG seed `9000`
 - reference scaling sample time `1000`
-- default closed-loop rollout length `1000` time units
+- default closed-loop rollout length `5000` time units
 - default `ode45` output grid `0.01` time units; this is an output grid, not a
   fixed-step integrator
+- test IC seed `9100` and independent uniform perturbations in
+  `[-0.01, 0.01]` per standardized coordinate
 
 Publication DS networks were initially trained for `100000` epochs. Most
 task/seed combinations used learning rate `0.01`; the exceptions were `MO5`
@@ -69,6 +76,11 @@ which used learning rate `0.005`. All `MO0` seeds were then continued for
 By default the test automatically uses a matching continuation network if one
 exists for that task/seed, then falls back to the base derivative-field network.
 The results table records `NetworkSet`, `UsedContinuation`, and `NetworkPath`.
+The same task-specific test IC is used across all weight seeds. It differs from
+the unperturbed spreadsheet IC while remaining in its local standardized
+neighbourhood. This `0.01` setting applies to final testing and publication
+plot-data generation; it does not replace the independently documented
+training- or validation-sampling settings.
 
 ## Numerical reproducibility
 

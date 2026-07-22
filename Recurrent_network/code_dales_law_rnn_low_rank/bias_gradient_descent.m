@@ -1,4 +1,5 @@
-function [bias,xhat,store,storeb] = bias_gradient_descent(x,xv,c,cv,win,eta,bias,phi,gx,gxv,no,epsilon,i1,i2) 
+function [bias,xhat,store,storeb] = bias_gradient_descent(x,xv,c,cv,win,eta,bias,phi,gx,gxv,no,epsilon,i1,i2)
+%BIAS_GRADIENT_DESCENT Train only neuronal biases with momentum.
 k = size(gx,1);
 phik = size(phi,2);
 store = zeros(no,2);
@@ -17,9 +18,10 @@ gamma = 0.9;
 prod3 = win*c;
 prod4 = win*cv;
 bias(i2) = -20;
+assert(numel(i1) >= 10, 'At least ten active neurons are required for bias-history plotting.');
 
 
-for j = 1:no 
+for j = 1:no
 fx = tanh(prod1+bias+prod3);
 fxv = tanh(prod2+bias+prod4);
 xhatv = phi(:,1:k)'*(fxv) ;
@@ -39,7 +41,7 @@ if loss>10^4
 break;
 end
 store(j,:)=[loss,lossv];
-storeb(j,:) = bias(i1(1:10));
+storeb(j,:) = bias(i1(1:10)).';
 figure(1)
 if mod(j,10)==1
 if size(x,1) >=2 
@@ -48,10 +50,10 @@ loglog((1:j),(store(1:j,:)))
 title('Loss')
 xlabel('Iterate')
 subplot(1,3,2)
-plot(xhat',gx','.'),  hold on 
+plot(xhat',gx','.'), hold on
 plot([-1,1],[-1,1],'b'), hold off
 xlabel('\hat{y}')
-xlabel('y')
+ylabel('y')
 title(sprintf('Step %d',j))
 subplot(1,3,3)
 plot((1:j),storeb(1:j,:))

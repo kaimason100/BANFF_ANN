@@ -1,8 +1,8 @@
 %% Train seeded derivative-field dynamical-system networks locally.
 % This wrapper calls the shared derivative-field trainer with the publication
-% default options. For a given task/seed, the saved network, metadata, training
-% samples, validation samples, and output folder are deterministic up to normal
-% MATLAB numerical differences across machines.
+% default options. For a given task/seed, the saved
+% network, metadata, training samples, validation samples, and output folder
+% are deterministic up to normal MATLAB numerical differences across machines.
 
 clear; close all; clc;
 

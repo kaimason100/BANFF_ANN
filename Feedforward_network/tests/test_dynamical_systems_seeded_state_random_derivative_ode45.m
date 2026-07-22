@@ -23,10 +23,10 @@ CONTINUATION_NETWORK_SETS = "auto";
 TASKS = ["Lorenz", "MO0", "MO5", "MO7", "MO13", "Rikitake", "SprottB", "SprottC", "SprottS"];
 SEEDS = 0:9;
 
-CLOSED_LOOP_ROLLOUT_LENGTH = 1000;
+CLOSED_LOOP_ROLLOUT_LENGTH = 5000;
 ODE_OUTPUT_DT = 0.01; % ode45 output grid only, matching the reference code; not a fixed-step integrator.
 TEST_IC_RANDOM_SEED = 9100;
-TEST_IC_PERTURBATION_SCALE = 0; % Standardized-state perturbation around the spreadsheet IC.
+TEST_IC_PERTURBATION_SCALE = 0.01; % Standardized-state perturbation around the spreadsheet IC.
 PLOT_TEST_FIGURES = true;
 SAVE_RESULTS = true;
 
