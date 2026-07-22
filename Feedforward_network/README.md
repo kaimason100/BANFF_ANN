@@ -4,15 +4,14 @@ MATLAB live-script release for seeded non-spiking/rate-network experiments. The
 active package now contains only the seeded workflows used for the publication
 runs.
 
-## Partner Publication
+## Associated Publication
 
-This feedforward package accompanies the partner bioRxiv preprint:
-
-[bioRxiv 10.1101/2025.10.05.680523v1](https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract)
-
-Use the scripts and documentation here to reproduce the seeded feedforward
-experiments associated with that manuscript. Exact trained-network artifacts and
-large generated outputs are intentionally not part of the GitHub code release.
+This feedforward package accompanies the journal publication *Rapidly
+Reconfigurable Dynamic Computing in Neural Networks with Fixed Synaptic
+Connectivity*. Use the scripts and documentation here to reproduce the seeded
+feedforward experiments associated with the article. Exact trained-network
+artifacts and large generated outputs are intentionally not part of the GitHub
+code release.
 
 ## Start here
 

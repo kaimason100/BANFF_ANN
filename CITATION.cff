@@ -14,8 +14,3 @@ authors:
   - family-names: Nicola
     given-names: Wilten
 repository-code: "https://github.com/kaimason100/BANFF_ANN"
-url: "https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract"
-identifiers:
-  - type: doi
-    value: "10.1101/2025.10.05.680523"
-    description: "Associated bioRxiv preprint"

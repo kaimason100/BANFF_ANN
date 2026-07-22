@@ -19,11 +19,10 @@ should then follow `Feedforward_network/docs/GETTING_STARTED.md` and
 
 ## Publication
 
-The public preprint is available at
-[bioRxiv 10.1101/2025.10.05.680523v1](https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract).
-Please cite the journal article when its final bibliographic record is
-available; the repository citation metadata retains the preprint link for
-traceability.
+This repository contains the software accompanying the journal publication
+*Rapidly Reconfigurable Dynamic Computing in Neural Networks with Fixed
+Synaptic Connectivity*. Please cite the journal article using its final
+bibliographic record.
 
 ## Repository Scope
 

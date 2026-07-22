@@ -7,11 +7,11 @@ plot data.
 
 Run the feedforward scripts from inside `Feedforward_network`.
 
-This package accompanies the partner bioRxiv preprint
-https://www.biorxiv.org/content/10.1101/2025.10.05.680523v1.abstract. The
+This package accompanies the journal publication *Rapidly Reconfigurable
+Dynamic Computing in Neural Networks with Fixed Synaptic Connectivity*. The
 GitHub repository is intended to contain source code and documentation; large
-local datasets, trained networks, and generated outputs are
-excluded from normal commits.
+local datasets, trained networks, and generated outputs are excluded from
+normal commits.
 
 ## 1. Software requirements
 
