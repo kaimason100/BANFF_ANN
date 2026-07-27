@@ -201,3 +201,7 @@ Place user-prepared datasets in `data` where required. See
 variables, column conventions, and example conversion code. Do not pre-normalize
 features before saving datasets; the training scripts fit normalization from
 training data only.
+
+## License
+
+This package is released under the repository's MIT License. See `../LICENSE`.
