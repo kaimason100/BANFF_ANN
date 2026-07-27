@@ -48,3 +48,7 @@ Deep Learning Toolbox and Statistics and Machine Learning Toolbox. MNIST-family
 image preparation uses Image Processing Toolbox functions, and the two-joint
 arm task requires Control System Toolbox. A supported GPU is optional. Recurrent
 experiments use standard MATLAB numerical solvers and the supplied source files.
+
+## License
+
+This software is released under the MIT License. See `LICENSE`.
