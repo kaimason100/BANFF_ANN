@@ -6,3 +6,7 @@ manuscript. Open that folder's README for the experiment-to-script map,
 hyperparameters, generated files, and run order.
 
 The feedforward package is separate and is not called by these scripts.
+
+## License
+
+This package is released under the repository's MIT License. See `../LICENSE`.
