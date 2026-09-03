@@ -10,6 +10,11 @@ data, load saved networks, or change plotting dependencies.
 `publication/plot_data_generation` contains the scripts that create the
 `*_plot_data.mat` files used by the plots.
 
+Publication scripts use the local `src/plotting/slanCM.m` compatibility helper
+for selected colour maps. Attribution, licence terms and upstream colour-map
+provenance are documented in the repository-level `THIRD_PARTY_NOTICES.md` and
+`LICENSES/BSD-3-Clause-slanColor.txt` files.
+
 In the generation scripts:
 
 - `USE_SEEDED_NETWORKS = true` uses the seeded networks. The publication

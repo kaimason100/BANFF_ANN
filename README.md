@@ -51,4 +51,7 @@ experiments use standard MATLAB numerical solvers and the supplied source files.
 
 ## License
 
-This software is released under the MIT License. See `LICENSE`.
+Except for identified third-party material, this software is released under
+the MIT License. See `LICENSE`. Third-party attribution and applicable licence
+terms, including those for the `slanCM` plotting compatibility support, are
+provided in `THIRD_PARTY_NOTICES.md` and `LICENSES`.

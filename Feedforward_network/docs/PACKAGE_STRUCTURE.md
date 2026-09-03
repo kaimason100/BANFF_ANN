@@ -19,6 +19,8 @@ This document describes the `Feedforward_network` package.
 - `src/initializers` contains the deterministic frozen-weight initializers.
 - `src/preprocessing` contains reusable time-delay preprocessing helpers.
 - `src/dynamical_systems` contains dynamical-system right-hand-side helpers.
+- `src/plotting` contains publication plotting helpers, including the `slanCM`
+  compatibility function documented in the repository's third-party notices.
 - `trained_networks` contains saved seeded `.mat` artifacts.
 - `data` contains datasets required by local examples and tests.
 - `publication` contains publication plotting and plot-data generation scripts.
@@ -70,3 +72,6 @@ scripts, and plot-data generators. It excludes:
 - local dataset `.mat` files in `data`
 - generated publication `.mat`, `.mp4`, and `.gif` outputs
 - previous release folders
+
+Repository release packages must retain `THIRD_PARTY_NOTICES.md` and the
+`LICENSES` directory alongside the root MIT licence.

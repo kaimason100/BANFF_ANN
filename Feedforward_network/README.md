@@ -204,4 +204,7 @@ training data only.
 
 ## License
 
-This package is released under the repository's MIT License. See `../LICENSE`.
+Except for identified third-party material, this package is released under the
+repository's MIT License. See `../LICENSE`. The publication plotting support
+includes a `slanCM` compatibility helper associated with BSD-licensed slanColor
+material; see `../THIRD_PARTY_NOTICES.md` and `../LICENSES`.
