@@ -26,10 +26,12 @@ bibliographic record.
 
 ## Repository Scope
 
-GitHub contains source code and documentation. Trained networks, source dataset
-MAT files, generated results, publication plot-data MAT files, figures, videos,
-and local compute-environment packages are intentionally excluded. These files
-must be generated or supplied locally as described in the package documentation.
+GitHub contains source code, documentation, and the prepared dataset MAT files
+used by the feedforward experiments. Trained networks, generated results,
+publication plot-data MAT files, figures, videos, and local compute-environment
+packages are intentionally excluded. Dataset provenance, preparation details,
+checksums, and third-party licence terms are documented in
+`Feedforward_network/docs/DATASETS.md` and `THIRD_PARTY_NOTICES.md`.
 
 ## Reproducibility
 
@@ -53,5 +55,5 @@ experiments use standard MATLAB numerical solvers and the supplied source files.
 
 Except for identified third-party material, this software is released under
 the MIT License. See `LICENSE`. Third-party attribution and applicable licence
-terms, including those for the `slanCM` plotting compatibility support, are
-provided in `THIRD_PARTY_NOTICES.md` and `LICENSES`.
+terms, including those for the supplied datasets and `slanCM` plotting
+compatibility support, are provided in `THIRD_PARTY_NOTICES.md` and `LICENSES`.

@@ -8,10 +8,10 @@ runs.
 
 This feedforward package accompanies the journal publication *Rapidly
 Reconfigurable Dynamic Computing in Neural Networks with Fixed Synaptic
-Connectivity*. Use the scripts and documentation here to reproduce the seeded
-feedforward experiments associated with the article. Exact trained-network
-artifacts and large generated outputs are intentionally not part of the GitHub
-code release.
+Connectivity*. Use the scripts, prepared datasets, and documentation here to
+reproduce the seeded feedforward experiments associated with the article.
+Exact trained-network artifacts and large generated outputs are intentionally
+not part of the GitHub release.
 
 ## Start here
 
@@ -39,7 +39,8 @@ The shorter sections below summarize the active package.
 - `src/preprocessing` - reusable time-delay helpers.
 - `src/dynamical_systems` - dynamical-system right-hand-side helpers.
 - `trained_networks` - saved seeded network artifacts.
-- `data` - datasets expected by local scripts.
+- `data` - prepared datasets used by the local scripts, with checksums and
+  provenance documented in `docs/DATASETS.md`.
 - `publication` - publication plot scripts and plot-data generation scripts.
 - `docs` - newcomer instructions, dataset preparation, package notes, and
   testing notes.
@@ -168,10 +169,10 @@ seeded aggregate statistics from one controlled execution environment.
 
 ## Release zip contents
 
-Release zips are code/documentation packages only. They exclude saved networks,
-generated output folders, publication plot-data MAT files, videos, local dataset
-MAT files, and old release folders. New users should recreate local datasets
-following `docs/DATASETS.md` and then run the active seeded scripts.
+GitHub source archives include the prepared dataset MAT files in `data`. They
+exclude saved networks, generated output folders, publication plot-data MAT
+files, videos, and old release folders. Dataset-specific third-party licences
+remain applicable; see `docs/DATASETS.md` and `../THIRD_PARTY_NOTICES.md`.
 
 ## Running tests
 
@@ -196,15 +197,16 @@ normalization from validation or test data.
 
 ## Dataset files
 
-Place user-prepared datasets in `data` where required. See
-`docs/DATASETS.md` for download locations, expected file names, expected MAT
-variables, column conventions, and example conversion code. Do not pre-normalize
-features before saving datasets; the training scripts fit normalization from
-training data only.
+The exact prepared datasets used for the released experiments are supplied in
+`data`. See `docs/DATASETS.md` for sources, licences, checksums, MAT variables,
+column conventions, and preprocessing disclosures. Do not replace them with
+pre-normalized files: the training scripts fit normalization from training data
+only.
 
 ## License
 
 Except for identified third-party material, this package is released under the
-repository's MIT License. See `../LICENSE`. The publication plotting support
-includes a `slanCM` compatibility helper associated with BSD-licensed slanColor
-material; see `../THIRD_PARTY_NOTICES.md` and `../LICENSES`.
+repository's MIT License. See `../LICENSE`. The prepared datasets retain their
+respective upstream licences, and the plotting support includes a `slanCM`
+compatibility helper associated with BSD-licensed slanColor material. See
+`../THIRD_PARTY_NOTICES.md` and `../LICENSES`.

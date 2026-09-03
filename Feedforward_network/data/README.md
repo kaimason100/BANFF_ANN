@@ -1,9 +1,11 @@
 # Data Folder
 
-Place local dataset MAT files here when running the training and test scripts.
-The release zip intentionally does not include the large task datasets or saved
-outputs. See `docs/DATASETS.md` for download sources, expected filenames,
-variable names, and array/table formats.
+This folder contains the prepared MAT datasets used by the released training
+and test scripts. Verify downloaded files with `SHA256SUMS`. See
+`../docs/DATASETS.md` for sources, licences, exact encodings, expected variable
+names, and array formats. The repository's MIT licence does not replace the
+third-party dataset licences documented there and in
+`../../THIRD_PARTY_NOTICES.md`.
 
 Required dataset files for a full local run are:
 
@@ -20,8 +22,9 @@ Required dataset files for a full local run are:
 - `afro_mnist_osmanya.mat`
 - `afro_mnist_vai.mat`
 
-`fisheriris` is loaded directly from MATLAB. Pong supervised data and the
-motor-control LQR episodes are generated inside their respective training
-scripts. Motor-control training writes
+`fisheriris` is loaded directly from MATLAB. Pong supervised data and
+motor-control episodes are generated inside their respective training scripts.
+Motor-control training writes
 `LQR_SUPERVISED_EPISODES_20251002_172744.mat` as a generated compatibility
-artifact; it is not a required input for a clean run.
+artefact; it is not a required input and is not included in the public dataset
+bundle.

@@ -22,7 +22,8 @@ This document describes the `Feedforward_network` package.
 - `src/plotting` contains publication plotting helpers, including the `slanCM`
   compatibility function documented in the repository's third-party notices.
 - `trained_networks` contains saved seeded `.mat` artifacts.
-- `data` contains datasets required by local examples and tests.
+- `data` contains the prepared datasets used by local examples and tests,
+  together with a checksum manifest.
 - `publication` contains publication plotting and plot-data generation scripts.
 - `docs` contains newcomer instructions, dataset preparation, package notes, and
   testing notes.
@@ -64,12 +65,11 @@ closed-loop dynamical systems can amplify those small differences.
 
 ## Release Packaging
 
-The clean release package contains active code, documentation, publication plot
-scripts, and plot-data generators. It excludes:
+The clean release package contains active code, documentation, prepared
+datasets, publication plot scripts, and plot-data generators. It excludes:
 
 - `trained_networks`
 - `outputs`
-- local dataset `.mat` files in `data`
 - generated publication `.mat`, `.mp4`, and `.gif` outputs
 - previous release folders
 

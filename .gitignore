@@ -10,6 +10,8 @@ Feedforward_network/**/trained_networks/
 
 # Local datasets and large generated publication artifacts
 Feedforward_network/**/data/*.mat
+!Feedforward_network/data/*.mat
+Feedforward_network/data/LQR_SUPERVISED_EPISODES_20251002_172744.mat
 Feedforward_network/publication/plots/*.mat
 Feedforward_network/publication/plots/*.mp4
 Feedforward_network/publication/plots/*.gif

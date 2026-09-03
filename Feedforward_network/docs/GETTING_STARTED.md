@@ -9,9 +9,9 @@ Run the feedforward scripts from inside `Feedforward_network`.
 
 This package accompanies the journal publication *Rapidly Reconfigurable
 Dynamic Computing in Neural Networks with Fixed Synaptic Connectivity*. The
-GitHub repository is intended to contain source code and documentation; large
-local datasets, trained networks, and generated outputs are excluded from
-normal commits.
+GitHub repository contains source code, documentation, and the prepared dataset
+MAT files used for the released experiments. Trained networks and generated
+outputs are excluded from normal commits.
 
 ## 1. Software requirements
 
@@ -58,8 +58,9 @@ absolute path of `Feedforward_network` or its parent repository folder.
 ## 3. First-time setup
 
 1. Put the repository somewhere MATLAB can access.
-2. Put required dataset files in `data`. See `docs/DATASETS.md` for exact file
-   names, variable names, and expected array shapes.
+2. Confirm that the supplied dataset files are present in `data`. See
+   `docs/DATASETS.md` for provenance, licences, checksums, exact file names,
+   variable names, and expected array shapes.
 3. Open MATLAB and set the current folder to `Feedforward_network`, not the
    top-level folder that contains both network packages.
 4. Run a quick path/root check:
@@ -87,7 +88,7 @@ while the custom weight matrices are frozen.
 
 The safest full local order is:
 
-1. Prepare datasets in `data`.
+1. Verify the supplied datasets in `data` against `data/SHA256SUMS`.
 2. Train tabular classification tasks.
 3. Train MNIST-family image tasks.
 4. Train regression tasks.
