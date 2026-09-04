@@ -221,13 +221,13 @@ function [X, labels, batchSize] = classificationDataset(repoRoot, task)
         case 'breast_cancer'
             S = load(fullfile(dataDir, 'breast_cancer_dataset.mat')); [labels, X] = breastCancerData(S.data); batchSize = 256;
         case 'car_quality'
-            S = load(fullfile(dataDir, 'car_dataset.mat')); D = S.data; labels = categorical(D(:, 7)); D(~isfinite(D)) = 0; X = D(:, 1:6).'; batchSize = 256;
+            S = load(fullfile(dataDir, 'car_dataset.mat')); D = S.data; labels = categorical(D(:, 7)); D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix'); X = D(:, 1:6).'; batchSize = 256;
         case 'mushroom'
-            S = load(fullfile(dataDir, 'mushroom_dataset.mat')); D = S.data; labels = categorical(D(:, 1)); D(~isfinite(D)) = 0; X = D(:, 2:end).'; batchSize = 4096;
+            S = load(fullfile(dataDir, 'mushroom_dataset.mat')); D = S.data; labels = categorical(D(:, 1)); D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix'); X = D(:, 2:end).'; batchSize = 4096;
         otherwise
             error('Unknown classification task: %s', task);
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, task, 'assembled classification predictors');
 end
 
 function [labels, X] = breastCancerData(data)
@@ -242,7 +242,7 @@ function [labels, X] = breastCancerData(data)
     else
         error('Unsupported breast-cancer data format.');
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'breast_cancer', 'loaded predictors');
 end
 
 function stats = fitFeatureStandardization(XTrain)
@@ -254,7 +254,7 @@ end
 
 function X = applyFeatureStandardization(X, stats)
     X = stats.scale * ((X - stats.mu) ./ stats.sigma);
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'current task', 'standardized predictors');
 end
 `;
 
@@ -365,13 +365,13 @@ function [X, y, batchSize] = regressionDataset(repoRoot, task)
     dataDir = fullfile(repoRoot, 'data');
     switch task
         case 'abalone'
-            S = load(fullfile(dataDir, 'abalone_dataset.mat')); D = S.data; D(~isfinite(D)) = 0; y = D(:, end); X = D(:, 1:end-1).'; batchSize = size(X, 2);
+            S = load(fullfile(dataDir, 'abalone_dataset.mat')); D = S.data; D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix'); y = D(:, end); X = D(:, 1:end-1).'; batchSize = size(X, 2);
         case 'toyota'
-            S = load(fullfile(dataDir, 'toyota_dataset.mat')); D = S.data; D(~isfinite(D)) = 0; y = D(:, 3); X = D(:, [1, 2, 4:size(D, 2)]).'; batchSize = min(4096, size(X, 2));
+            S = load(fullfile(dataDir, 'toyota_dataset.mat')); D = S.data; D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix'); y = D(:, 3); X = D(:, [1, 2, 4:size(D, 2)]).'; batchSize = min(4096, size(X, 2));
         otherwise
             error('Unknown regression task: %s', task);
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, task, 'assembled regression predictors');
 end
 
 function stats = fitFeatureStandardization(XTrain)
@@ -383,7 +383,7 @@ end
 
 function X = applyFeatureStandardization(X, stats)
     X = stats.scale * ((X - stats.mu) ./ stats.sigma);
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'current task', 'standardized predictors');
 end
 `;
 
@@ -759,7 +759,7 @@ end
 function X = applyImageStandardization(X, stats)
     X = im2single(ensure4d(X));
     X = stats.scale * ((X - stats.mu) ./ stats.sigma);
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'MNIST-family task', 'standardized images');
 end
 
 function X = ensure4d(X)

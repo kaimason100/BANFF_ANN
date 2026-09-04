@@ -369,7 +369,8 @@ switch lower(task)
     case 'toyota'
         S = load(fullfile(repoRoot, 'data', 'toyota_dataset.mat'));
         D = S.data;
-        D(~isfinite(D)) = 0;
+        D = replaceNonfiniteDatasetValues(D, 'toyota', ...
+            'loaded encoded matrix');
         Y = D(:, 3);
         X = D(:, [1, 2, 4:size(D, 2)]).';
     otherwise
@@ -622,7 +623,8 @@ function xOut = applyStateStandardization(x, stats)
 scale = 1;
 if isfield(stats, 'scale'), scale = stats.scale; end
 xOut = scale * ((double(x) - stats.mu) ./ stats.sigma);
-xOut(~isfinite(xOut)) = 0;
+xOut = replaceNonfiniteDatasetValues(xOut, 'dynamical_systems', ...
+    'publication standardized state values');
 end
 
 function xRaw = inverseStateStandardization(xNorm, stats)

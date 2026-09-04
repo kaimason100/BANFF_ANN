@@ -524,7 +524,8 @@ end
 
 function x = applyStateStandardization(x, stats)
     x = stats.scale * ((x - stats.mu) ./ stats.sigma);
-    x(~isfinite(x)) = 0;
+    x = replaceNonfiniteDatasetValues(x, 'dynamical_systems', ...
+        'standardized state values');
 end
 
 function x = inverseStateStandardization(xNorm, stats)

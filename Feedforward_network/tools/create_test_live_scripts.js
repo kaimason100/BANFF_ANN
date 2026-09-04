@@ -303,19 +303,19 @@ function [X, labels] = classificationData(datasetName, data)
             [labels, X] = extractBreastCancer(data);
         case 'car_dataset.mat'
             labels = categorical(data(:, 7));
-            data(~isfinite(data)) = 0;
+            data = replaceNonfiniteDatasetValues(data, 'car_quality', 'loaded encoded matrix');
             X = data(:, 1:6).';
             C = size(X, 1);
             X = (1/sqrt(C)) * ((X - mean(X, 2)) ./ std(X, 0, 2));
         case 'mushroom_dataset.mat'
             labels = categorical(data(:, 1));
-            data(~isfinite(data)) = 0;
+            data = replaceNonfiniteDatasetValues(data, 'mushroom', 'loaded encoded matrix');
             X = data(:, 2:end).';
             X = normalize(X, 2) / sqrt(size(X, 1));
         otherwise
             error('Unsupported classification dataset: %s', datasetName);
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'classification task', 'assembled predictors');
 end
 
 function [labels, X] = extractBreastCancer(data)
@@ -397,7 +397,7 @@ ${sharedHelpers}
 
 function [XTest, YTest, yMu, yStd] = regressionTestData(datasetName, data)
 % Rebuild the same held-out split and target scaling used by training.
-    data(~isfinite(data)) = 0;
+    data = replaceNonfiniteDatasetValues(data, erase(datasetName, '_dataset.mat'), 'loaded encoded matrix');
     switch datasetName
         case 'abalone_dataset.mat'
             y = data(:, end);
@@ -414,7 +414,7 @@ function [XTest, YTest, yMu, yStd] = regressionTestData(datasetName, data)
         otherwise
             error('Unsupported regression dataset: %s', datasetName);
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, erase(datasetName, '_dataset.mat'), 'standardized predictors');
     cv = cvpartition(size(X, 2), 'HoldOut', 0.2);
     trainFullIdx = find(training(cv));
     testIdx = find(test(cv));
@@ -853,7 +853,8 @@ function [XTest, YTest] = mnistTestData(training, test, label)
     XTest = ensure4d(test.images);
     XTest = im2single(XTest);
     XTest = normalize(XTest, 4) / sqrt(28*28);
-    XTest(isnan(XTest)) = 0;
+    XTest = replaceNonfiniteDatasetValues(XTest, 'MNIST-family task', ...
+        'legacy standardized test images');
     YTest = categorical(double(test.labels(:)) + 1);
 end
 

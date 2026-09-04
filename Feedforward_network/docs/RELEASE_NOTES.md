@@ -7,6 +7,18 @@ single-network scripts, duplicate MNIST scripts, saved-network tests for old
 single-run artifacts, and older dynamical-system NAR/random-window variants are
 not part of this public release.
 
+## Dataset availability and reporting
+
+The exact prepared dataset MAT files are included locally in `data`, together
+with checksums and provenance documentation. Active training, testing, and
+publication-data paths now report data handling explicitly. Loading the released
+Car Evaluation data prints the counts of the `doors = 5more` and
+`persons = more` placeholders converted to reserved code zero. Loading the
+released Mushroom data reports that its unknown stalk-root entries are already
+categorically encoded as code 5 and are not imputed. Any other non-finite value
+replacement issues warning `BANFF:UnexpectedDatasetImputation`; the numerical
+replacement behaviour itself is unchanged.
+
 ## Dynamical-system workflow
 
 The active dynamical-system workflow is the derivative-field ODE45

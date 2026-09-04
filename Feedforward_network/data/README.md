@@ -1,7 +1,9 @@
 # Data Folder
 
-This folder contains the prepared MAT datasets used by the released training
-and test scripts. Verify downloaded files with `SHA256SUMS`. See
+This folder contains the exact prepared MAT datasets used by the released local
+training and test scripts. They are supplied with the repository, so the normal
+workflow does not require a separate dataset download. Verify the local files
+with `SHA256SUMS`. See
 `../docs/DATASETS.md` for sources, licences, exact encodings, expected variable
 names, and array formats. The repository's MIT licence does not replace the
 third-party dataset licences documented there and in

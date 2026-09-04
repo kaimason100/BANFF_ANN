@@ -58,7 +58,9 @@ absolute path of `Feedforward_network` or its parent repository folder.
 ## 3. First-time setup
 
 1. Put the repository somewhere MATLAB can access.
-2. Confirm that the supplied dataset files are present in `data`. See
+2. Confirm that the exact prepared dataset files supplied locally with this
+   release are present in `data`; no separate download is needed for the normal
+   released workflow. See
    `docs/DATASETS.md` for provenance, licences, checksums, exact file names,
    variable names, and expected array shapes.
 3. Open MATLAB and set the current folder to `Feedforward_network`, not the

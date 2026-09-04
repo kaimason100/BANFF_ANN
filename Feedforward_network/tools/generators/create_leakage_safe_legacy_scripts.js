@@ -82,7 +82,7 @@ end
 
 function X = applyFeatureStandardization(X, stats)
     X = stats.scale * ((X - stats.mu) ./ stats.sigma);
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'current task', 'standardized predictors');
 end
 
 function assertFeatureStatsFromTraining(stats, X, trainIdx, label)
@@ -103,7 +103,7 @@ end
 function X = applyImageStandardization(X, stats)
     X = im2single(ensure4d(X));
     X = stats.scale * ((X - stats.mu) ./ stats.sigma);
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'MNIST-family task', 'standardized images');
 end
 
 function assertImageStatsFromTraining(stats, X, trainIdx, label)
@@ -195,20 +195,20 @@ function [X, labels, batchSize] = classificationDataset(repoRoot, task)
             batchSize = 256;
         case 'car_quality'
             S = load(fullfile(dataDir, 'car_dataset.mat'));
-            D = S.data; D(~isfinite(D)) = 0;
+            D = S.data; D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix');
             labels = categorical(D(:, 7));
             X = D(:, 1:6).';
             batchSize = 256;
         case 'mushroom'
             S = load(fullfile(dataDir, 'mushroom_dataset.mat'));
-            D = S.data; D(~isfinite(D)) = 0;
+            D = S.data; D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix');
             labels = categorical(D(:, 1));
             X = D(:, 2:end).';
             batchSize = 4096;
         otherwise
             error('Unknown classification task: %s', task);
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, task, 'assembled classification predictors');
 end
 
 function [labels, X] = breastCancerData(data)
@@ -223,7 +223,7 @@ function [labels, X] = breastCancerData(data)
     else
         error('Unsupported breast-cancer data format.');
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, 'breast_cancer', 'loaded predictors');
 end
 `;
 
@@ -307,20 +307,20 @@ function [X, y, batchSize] = regressionDataset(repoRoot, task)
     switch task
         case 'abalone'
             S = load(fullfile(dataDir, 'abalone_dataset.mat'));
-            D = S.data; D(~isfinite(D)) = 0;
+            D = S.data; D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix');
             y = D(:, end);
             X = D(:, 1:end-1).';
             batchSize = size(X, 2);
         case 'toyota'
             S = load(fullfile(dataDir, 'toyota_dataset.mat'));
-            D = S.data; D(~isfinite(D)) = 0;
+            D = S.data; D = replaceNonfiniteDatasetValues(D, task, 'loaded encoded matrix');
             y = D(:, 3);
             X = D(:, [1, 2, 4:size(D, 2)]).';
             batchSize = min(4096, size(X, 2));
         otherwise
             error('Unknown regression task: %s', task);
     end
-    X(~isfinite(X)) = 0;
+    X = replaceNonfiniteDatasetValues(X, task, 'assembled regression predictors');
 end
 `;
 
@@ -716,7 +716,7 @@ end
 
 function x = applyStateStandardization(x, stats)
     x = stats.scale * ((x - stats.mu) ./ stats.sigma);
-    x(~isfinite(x)) = 0;
+    x = replaceNonfiniteDatasetValues(x, 'dynamical_systems', 'standardized state values');
 end
 
 function assertStateStatsFromTraining(stats, xTrain, label)

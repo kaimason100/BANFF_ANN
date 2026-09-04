@@ -53,10 +53,18 @@ identified sources. Attribution, source links, and applicable licence links are
 also collected in the repository-level `THIRD_PARTY_NOTICES.md`. Share-alike
 terms continue to apply to the corresponding prepared MNIST and KMNIST files.
 
-## Missing And Non-finite Values
+## Local Availability And Data Handling
 
-All active tabular loaders include a defensive `~isfinite` replacement. In the
-supplied files this replacement changes only `car_dataset.mat`:
+The exact prepared MAT files used by the released local workflows are included
+in `Feedforward_network/data`. No separate dataset download or conversion is
+required to run the supplied training and testing scripts. The upstream links
+below document provenance and allow independent reconstruction; they are not
+runtime dependencies. File integrity can be checked against
+`Feedforward_network/data/SHA256SUMS`.
+
+All active loaders route non-finite observation replacement through
+`replaceNonfiniteDatasetValues`. In the supplied files this replacement changes
+only `car_dataset.mat`:
 
 - the stored matrix contains 432 NaNs in column 3, representing the legitimate
   `doors = 5more` category;
@@ -66,16 +74,39 @@ supplied files this replacement changes only `car_dataset.mat`:
   standardization. Zero is not used by another category in either column, so it
   remains a distinct category code. The MAT file itself is not overwritten.
 
+When Car Evaluation is loaded, the scripts print an informational message that
+reports both expected category counts and explains this conversion. If the
+shape, category counts, or location of non-finite values differs from the
+released file, the scripts issue warning identifier
+`BANFF:UnexpectedDatasetImputation` instead.
+
 The original Mushroom data use `?` for 2,480 unknown `stalk-root` entries. In
 the supplied `mushroom_dataset.mat`, these entries are deliberately retained as
 the fifth categorical code in that predictor rather than represented by NaN or
 zero. The supplied Mushroom matrix therefore contains neither NaNs nor zeros.
+When this dataset is loaded, the scripts print an informational message
+confirming this encoding and that no runtime imputation was performed. A
+different shape, category count, or any non-finite value triggers
+`BANFF:UnexpectedDatasetImputation`.
 
 The supplied Abalone, Breast Cancer, Toyota and MNIST-family MAT files contain
 no NaN or infinite values. Their stored zeros are data values, class labels or
 image background pixels, rather than values introduced by the runtime
 non-finite-value replacement. Consequently, the same defensive statements are
 no-ops for those files.
+
+Any non-finite observation encountered in any other dataset or at a later
+preprocessing stage is still replaced with zero to preserve the historical
+defensive behaviour, but now always generates
+`BANFF:UnexpectedDatasetImputation` with the number of affected values and the
+processing stage. Such a warning should be investigated before results are
+used.
+
+Several standardisation helpers replace a zero or non-finite estimated standard
+deviation with one to avoid division by zero. This is a scale safeguard for a
+constant or invalid feature; it does not replace an observed data value and is
+not data imputation. Any resulting non-finite standardised observations are
+reported by the mechanism above.
 
 ## Tabular Classification
 
