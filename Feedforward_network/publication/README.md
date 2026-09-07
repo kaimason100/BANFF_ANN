@@ -19,8 +19,9 @@ In the generation scripts:
 
 - `USE_SEEDED_NETWORKS = true` uses the seeded networks. The publication
   generators use `SEED = 9` for the representative publication examples.
-- `USE_SEEDED_NETWORKS = false` uses older single-network artifacts in
-  `trained_networks`, if present.
+- Keep `USE_SEEDED_NETWORKS = true`: this branch supports seeded models only.
+  Dataset/control models come from `trained_networks/seeded_grouped`.
+  Regenerate cached plot data after retraining (`FORCE_REGENERATE = true`).
 - Dynamical-system publication data should use the active derivative-field
   seeded networks in `trained_networks/seeded_state_random_derivative_ode45_lr_0p01`,
   or a matching continuation network set if selected by the generator.

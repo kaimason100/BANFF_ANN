@@ -1,5 +1,10 @@
 # Feedforward Non-spiking Neural Networks Bias Learning
 
+This is the shared-implementation development branch. Start with
+[the branch workflow and leakage policy](docs/SHARED_IMPLEMENTATION.md) for the single publication
+schedule, shared local/Slurm entry points, corrected grouped splits and
+verification limitations. Existing publication releases are unchanged.
+
 MATLAB live-script release for seeded non-spiking/rate-network experiments. The
 active package now contains only the seeded workflows used for the publication
 runs.
@@ -36,7 +41,7 @@ The shorter sections below summarize the active package.
 - `tests` - seeded saved-network tests; these load saved artifacts and do not
   retrain.
 - `src/initializers` - deterministic custom weight initializers.
-- `src/preprocessing` - reusable time-delay helpers.
+- `src/preprocessing` - audited non-finite-value handling.
 - `src/dynamical_systems` - dynamical-system right-hand-side helpers.
 - `trained_networks` - saved seeded network artifacts.
 - `data` - prepared datasets used by the local scripts, with checksums and
@@ -48,7 +53,7 @@ The shorter sections below summarize the active package.
 ## Active training scripts
 
 All active training scripts use the seeded release convention `SEEDS = 0:9` and
-save to `trained_networks/seeded/<task>` unless stated otherwise.
+save to `trained_networks/seeded_grouped/<task>` unless stated otherwise.
 
 Classification:
 

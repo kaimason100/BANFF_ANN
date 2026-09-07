@@ -17,7 +17,7 @@ if any(~isfinite(xPred(:))) || any(~isfinite(xTrue(:)))
 end
 
 nStates = min(size(xPred, 2), size(xTrue, 2));
-pairs = phasePortraitPairs(nStates);
+pairs = banff.shared.phasePortraitPairs(nStates);
 pairScores = nan(size(pairs, 1), 1);
 for p = 1:size(pairs, 1)
     predCloud = phasePortraitCloud(xPred(:, 1:nStates), pairs(p, :), options);
@@ -50,14 +50,6 @@ for k = 1:numel(names)
     if ~isfield(options, name) || isempty(options.(name))
         options.(name) = defaults.(name);
     end
-end
-end
-
-function pairs = phasePortraitPairs(nStates)
-if nStates >= 2
-    pairs = nchoosek(1:nStates, 2);
-else
-    pairs = [1 1];
 end
 end
 

@@ -1,5 +1,10 @@
 # Dataset Provenance And Preparation
 
+This is the shared-implementation development branch. Start with
+[the branch workflow and leakage policy](SHARED_IMPLEMENTATION.md) for the single publication
+schedule, shared local/Slurm entry points, corrected grouped splits and
+verification limitations. Existing publication releases are unchanged.
+
 The public repository includes the prepared MAT files used for the released
 experiments in `Feedforward_network/data`. Their SHA-256 digests are recorded
 in `data/SHA256SUMS`. These prepared copies are redistributed under their
@@ -257,8 +262,8 @@ save("data/mnist.mat", "training", "test", "-v7.3")
 No source MAT file is required before training. The active motor-control script
 generates 250 supervised LQR episodes, makes an episode-level training and
 validation split, and generates 100 separate held-out targets. It writes
-`data/LQR_SUPERVISED_EPISODES_20251002_172744.mat` as a generated compatibility
-artifact for plotting and inspection. Do not substitute rows from that file
+`outputs/training_data/motor_control/episodes_seed_<seed>.mat` as a generated
+artifact for inspection. Do not substitute rows from that file
 into the held-out closed-loop test.
 
 ## Dynamical Systems

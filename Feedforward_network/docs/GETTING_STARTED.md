@@ -1,5 +1,10 @@
 # Getting Started With The Feedforward Package
 
+This is the shared-implementation development branch. Start with
+[the branch workflow and leakage policy](SHARED_IMPLEMENTATION.md) for the single publication
+schedule, shared local/Slurm entry points, corrected grouped splits and
+verification limitations. Existing publication releases are unchanged.
+
 This guide is written for a new user who has not seen the code before. It
 explains what the package contains, how to prepare MATLAB, how to run the
 training scripts, how to test saved networks, and how to regenerate publication
@@ -48,7 +53,7 @@ absolute path of `Feedforward_network` or its parent repository folder.
 - `tests` contains saved-network test scripts. These load saved networks and
   never retrain.
 - `src/initializers` contains the deterministic frozen-weight initializers.
-- `src/preprocessing` contains reusable time-delay helpers.
+- `src/preprocessing` contains the audited non-finite-value handling helper.
 - `data` contains the datasets used by local training and test scripts.
 - `trained_networks` is the expected output folder for saved networks.
 - `publication/plot_data_generation` creates the MAT files used by publication
@@ -159,7 +164,7 @@ run("examples/classification/train_afro_mnist_vai_seeded.mlx")
 Outputs are saved to:
 
 ```text
-trained_networks/seeded/<task>/<task>_seed_<seed>_network.mat
+trained_networks/seeded_grouped/<task>/<task>_seed_<seed>_network.mat
 ```
 
 Tabular classification scripts train for `1000` epochs with Adam learning rate
@@ -188,7 +193,7 @@ per-seed tests, not a formal combined-significance test.
 Outputs are saved to:
 
 ```text
-trained_networks/seeded/<task>/<task>_seed_<seed>_network.mat
+trained_networks/seeded_grouped/<task>/<task>_seed_<seed>_network.mat
 ```
 
 Regression scripts train for `1000` epochs with Adam learning rate `0.01`.
@@ -205,7 +210,7 @@ The Pong trainer generates its own supervised training samples inside the
 script, then saves seeded networks to:
 
 ```text
-trained_networks/seeded/pong/pong_seed_<seed>_network.mat
+trained_networks/seeded_grouped/Pong/Pong_seed_<seed>_network.mat
 ```
 
 Pong trains for `20000` epochs with Adam learning rate `0.001`.
@@ -229,7 +234,7 @@ The motor-control script generates supervised LQR episodes and saves seeded
 networks to:
 
 ```text
-trained_networks/seeded/motor_control/motor_control_seed_<seed>_network.mat
+trained_networks/seeded_grouped/LQR_two_link_arm/LQR_two_link_arm_seed_<seed>_network.mat
 ```
 
 Motor control trains for `10000` epochs with Adam learning rate `0.01`.
@@ -474,8 +479,7 @@ Important generator settings:
 
 - `USE_SEEDED_NETWORKS = true` loads a seeded network.
 - `SEED = 9` chooses the representative seeded network used by the publication generators.
-- `USE_SEEDED_NETWORKS = false` loads older single-network artifacts, if they
-  are present.
+- Keep `USE_SEEDED_NETWORKS = true`; this branch only supports seeded models.
 - `FORCE_REGENERATE = false` keeps existing plot-data files.
 - `FORCE_REGENERATE = true` overwrites existing plot-data files.
 - For dynamical systems, the plot-data generator uses the active

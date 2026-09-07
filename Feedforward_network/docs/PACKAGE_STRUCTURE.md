@@ -1,5 +1,10 @@
 # Feedforward Package Structure
 
+This is the shared-implementation development branch. Start with
+[the branch workflow and leakage policy](SHARED_IMPLEMENTATION.md) for the single publication
+schedule, shared local/Slurm entry points, corrected grouped splits and
+verification limitations. Existing publication releases are unchanged.
+
 This repository is organized as a seeded MATLAB live-script release. Active
 user-facing scripts are `.mlx` files.
 
@@ -17,7 +22,9 @@ This document describes the `Feedforward_network` package.
 - `examples/pong` contains the active seeded Pong trainer and playback script.
 - `tests` contains active seeded tests and seeded weight-consistency checks.
 - `src/initializers` contains the deterministic frozen-weight initializers.
-- `src/preprocessing` contains reusable time-delay preprocessing helpers.
+- `src/preprocessing` contains the audited non-finite-value handling helper.
+- `src/+banff` contains shared training, testing, splitting and schedule functions.
+- `slurm` contains a thin adapter to those same functions, with no copied trainer.
 - `src/dynamical_systems` contains dynamical-system right-hand-side helpers.
 - `src/plotting` contains publication plotting helpers, including the `slanCM`
   compatibility function documented in the repository's third-party notices.
@@ -37,7 +44,7 @@ batch runner such as `train_classification_seeded.mlx`. Active tests use
 
 Saved seeded artifacts use:
 
-- `trained_networks/seeded/<task>/<task>_seed_<seed>_network.mat` for
+- `trained_networks/seeded_grouped/<task>/<task>_seed_<seed>_network.mat` for
   classification, regression, MNIST-family, Pong, and motor control.
 - `trained_networks/seeded_state_random_derivative_ode45_lr_0p01/<task>/<task>_seed_<seed>_network.mat`
   for the active derivative-field dynamical-system workflow.

@@ -1,0 +1,6 @@
+function biasBox(x, y, color, label, boxWidth, boxHeight, fontSize)
+    rectangle('Position', [x - boxWidth/2, y - boxHeight/2, boxWidth, boxHeight], ...
+              'FaceColor', color, 'EdgeColor', 'k', 'LineWidth', 1.5,'FaceAlpha',0.2);
+    text(x, y, label, 'FontSize', fontSize, 'FontWeight', 'bold', 'HorizontalAlignment', 'center', ...
+        'Interpreter', 'latex', 'Color', 'k', 'VerticalAlignment','middle','Clipping','off');
+end

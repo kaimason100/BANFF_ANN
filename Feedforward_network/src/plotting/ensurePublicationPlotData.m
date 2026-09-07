@@ -10,7 +10,7 @@ arguments
     repoRoot (1,:) char
     plotDataDir (1,:) char
     options.UseSeededNetworks (1,1) logical = true
-    options.Seed (1,1) double = 0
+    options.Seed (1,1) double = 9
     options.Force (1,1) logical = false
     options.ClosedLoopTspan (1,2) double = [0 5000]
     options.LorenzClosedLoopTspan (1,2) double = [0 5000]
@@ -25,7 +25,9 @@ arguments
     options.Tasks = "all"
 end
 
+assert(options.UseSeededNetworks,'This branch supports seeded networks only.');
 if ~exist(plotDataDir, 'dir'), mkdir(plotDataDir); end
+addpath(fullfile(repoRoot,'src'));
 addpath(fullfile(repoRoot, 'src', 'preprocessing'));
 addpath(fullfile(repoRoot, 'src', 'initializers'));
 addpath(fullfile(repoRoot, 'src', 'plotting'));
@@ -51,33 +53,28 @@ tasks(tasks == "dynamics") = "dynamical_systems";
 tasks(tasks == "bias") = "bias_histogram";
 end
 
-function runMaybe(shouldRun, generatorFcn, label, continueOnError)
+function runMaybe(shouldRun, generatorFcn, label, continueOnError) %#ok<INUSD>
 if ~shouldRun, return; end
-try
-    generatorFcn();
-catch ME
-    if continueOnError
-        warningId = ['PublicationPlotData:' matlab.lang.makeValidName(label)];
-        warning(warningId, 'Could not generate %s publication plot data: %s', label, ME.message);
-    else
-        rethrow(ME);
-    end
-end
+% Integrity failures must stop generation, including when Tasks is "all".
+generatorFcn();
 end
 
 function generateMnistPlotData(repoRoot, plotDataDir, options)
 outFile = fullfile(plotDataDir, 'MNIST_plot_data.mat');
 if isfile(outFile) && ~options.Force, return; end
-modelPath = resolveModelPath(repoRoot, 'mnist', 'mnist_network.mat', options);
+modelPath = resolveModelPath(repoRoot, 'mnist', options);
 Snet = load(modelPath);
 net = loadNetworkObject(Snet, modelPath);
 D = load(fullfile(repoRoot, 'data', 'mnist.mat'));
-[~, ~, XTest, YTest, numOut] = mnistData(D.training, D.test);
-if isfield(Snet, 'imageStats')
-    XEval = applyImageStandardization(XTest, Snet.imageStats);
-else
-    XEval = XTest;
-end
+[XFull, YFull, XTest, YTest, numOut] = banff.shared.mnistData(D.training, D.test,'mnist');
+assert(strcmp(Snet.metadata.datasetSHA256,banff.fileSHA256(fullfile(repoRoot,'data','mnist.mat'))), ...
+    'banff:SourceMismatch','MNIST plot dataset differs from training.');
+[trainIdx,valIdx] = banff.imageSplit(XFull,YFull,42);
+assert(isequal(trainIdx(:),Snet.split.trainIdx(:)) && isequal(valIdx(:),Snet.split.valIdx(:)), ...
+    'banff:SourceMismatch','MNIST plot split differs from training.');
+banff.shared.assertImageStatsFromTraining(Snet.imageStats,XFull,trainIdx,'mnist');
+banff.assertImagePartitions(XFull,XTest,Snet.imageStats,trainIdx,valIdx);
+XEval = applyImageStandardization(XTest, Snet.imageStats);
 scores = numericOutput(predictImageBatches(net, XEval, options.MnistBatchSize));
 plotData.output = scoresToClassIndex(scores, numOut, numel(YTest));
 plotData.true = double(YTest(:));
@@ -90,11 +87,20 @@ end
 function generateToyotaPlotData(repoRoot, plotDataDir, options)
 outFile = fullfile(plotDataDir, 'Toyota_plot_data.mat');
 if isfile(outFile) && ~options.Force, return; end
-modelPath = resolveModelPath(repoRoot, 'toyota', 'Toyota_network.mat', options);
+modelPath = resolveModelPath(repoRoot, 'toyota', options);
 Snet = load(modelPath);
 net = loadNetworkObject(Snet, modelPath);
 [X, Y] = loadRegressionData(repoRoot, 'toyota');
 assert(isfield(Snet, 'split') && isfield(Snet.split, 'testIdx'), 'Toyota network lacks test split metadata.');
+banff.assertPredictorPartitions(X,Y,{Snet.split.trainIdx,Snet.split.valIdx,Snet.split.testIdx});
+banff.shared.assertFeatureStatsFromTraining(Snet.featureStats,X,Snet.split.trainIdx,'toyota');
+banff.assertEffectivePartitions(banff.shared.applyFeatureStandardization(X,Snet.featureStats), ...
+    {Snet.split.trainIdx,Snet.split.valIdx,Snet.split.testIdx});
+expectedStd = std(Y(Snet.split.trainIdx)); if expectedStd==0, expectedStd=1; end
+banff.shared.assertStatsClose(Snet.targetStats.yMu,mean(Y(Snet.split.trainIdx)),'toyota','target mean');
+banff.shared.assertStatsClose(Snet.targetStats.yStd,expectedStd,'toyota','target SD');
+assert(isfield(Snet.metadata,'datasetSHA256') && strcmp(Snet.metadata.datasetSHA256, ...
+    banff.fileSHA256(banff.datasetPath('toyota'))),'Toyota plot dataset does not match training.');
 XTest = applyFeatureStandardization(X(:, Snet.split.testIdx), Snet.featureStats);
 YPredNorm = numericOutput(predictFeatureBatch(net, XTest));
 plotData.output = inverseTargetStandardization(YPredNorm(:), Snet.targetStats);
@@ -144,8 +150,9 @@ function generatePongPlotData(repoRoot, plotDataDir, options)
 outFile = fullfile(plotDataDir, 'Pong_plot_data.mat');
 videoFile = fullfile(plotDataDir, 'Pong_video_plot_data.mat');
 if isfile(outFile) && isfile(videoFile) && ~options.Force, return; end
-modelPath = resolveModelPath(repoRoot, 'pong', 'Pong_network.mat', options);
+modelPath = resolveModelPath(repoRoot, 'pong', options);
 Snet = load(modelPath);
+banff.assertControlAudit(Snet,'Pong');
 net = loadNetworkObject(Snet, modelPath);
 [plotData, videoPlotData] = simulatePongForPlot(net);
 plotData.biases_hidden1 = videoPlotData.biases_hidden1;
@@ -159,8 +166,9 @@ function generateLqrPlotData(repoRoot, plotDataDir, options)
 outFile = fullfile(plotDataDir, 'LQR_plot_data.mat');
 videoFile = fullfile(plotDataDir, 'LQR_video_plot_data.mat');
 if isfile(outFile) && isfile(videoFile) && ~options.Force, return; end
-modelPath = resolveModelPath(repoRoot, 'motor_control', 'LQR_network.mat', options);
+modelPath = resolveModelPath(repoRoot, 'motor_control', options);
 Snet = load(modelPath);
+banff.assertControlAudit(Snet,'LQR_two_link_arm');
 net = loadNetworkObject(Snet, modelPath);
 target = selectLqrPlotTarget(Snet.testSequence);
 sim = simulateMotorControllerForPlot(net, Snet, target);
@@ -195,19 +203,13 @@ end
 target = target(:);
 end
 
-function pathOut = resolveModelPath(repoRoot, task, singleName, options)
-if options.UseSeededNetworks
+function pathOut = resolveModelPath(repoRoot, task, options)
     taskNames = seededTaskAliases(task);
     candidates = {};
     for i = 1:numel(taskNames)
         taskName = taskNames{i};
-        candidates{end+1} = fullfile(repoRoot, 'trained_networks', 'seeded_closed_loop_random_windows', taskName, sprintf('%s_seed_%03d_network.mat', taskName, options.Seed)); %#ok<AGROW>
-        candidates{end+1} = fullfile(repoRoot, 'trained_networks', 'seeded', taskName, sprintf('%s_seed_%03d_network.mat', taskName, options.Seed)); %#ok<AGROW>
-        candidates{end+1} = fullfile(repoRoot, 'trained_networks', 'seeded_closed_loop', taskName, sprintf('%s_seed_%03d_network.mat', taskName, options.Seed)); %#ok<AGROW>
+        candidates{end+1} = fullfile(repoRoot, 'trained_networks', 'seeded_grouped', taskName, sprintf('%s_seed_%03d_network.mat', taskName, options.Seed)); %#ok<AGROW>
     end
-else
-    candidates = {fullfile(repoRoot, 'trained_networks', singleName)};
-end
 existsMask = cellfun(@isfile, candidates);
 idx = find(existsMask, 1, 'first');
 assert(~isempty(idx), 'Missing saved network for %s. Checked: %s', task, strjoin(candidates, ', '));
@@ -215,13 +217,6 @@ pathOut = candidates{idx};
 end
 
 function [modelPath, selectedNetworkSet, usedContinuation] = resolveDynamicalSystemModelPath(repoRoot, task, options)
-if ~options.UseSeededNetworks
-    selectedNetworkSet = "";
-    usedContinuation = false;
-    modelPath = fullfile(repoRoot, 'trained_networks', sprintf('%s_network.mat', char(task)));
-    assert(isfile(modelPath), 'Missing saved network for %s: %s', task, modelPath);
-    return
-end
 seedValue = double(options.Seed);
 baseNetworkSet = string(options.DynamicalSystemNetworkSet);
 usedContinuation = false;
@@ -304,21 +299,6 @@ elseif isfield(S, 'bestNet')
 else
     error('%s has no loadable network object.', modelPath);
 end
-end
-
-function [XTrain, YTrain, XTest, YTest, numOut] = mnistData(training, test)
-XTrain = ensure4d(training.images);
-XTest = ensure4d(test.images);
-YTrain = categorical(double(training.labels(:)) + 1);
-YTest = categorical(double(test.labels(:)) + 1);
-numOut = numel(categories(YTrain));
-end
-
-function X = ensure4d(X)
-if ndims(X) == 3
-    X = reshape(X, size(X,1), size(X,2), 1, size(X,3));
-end
-X = single(X);
 end
 
 function XSub = subsetImages(X, rows)
@@ -553,18 +533,18 @@ function generateBiasHistogramPlotData(repoRoot, plotDataDir, options)
 outFile = fullfile(plotDataDir, 'Bias_histogram_plot_data.mat');
 if isfile(outFile) && ~options.Force, return; end
 tasks = {
-    'mnist', 'mnist_network.mat'
-    'toyota', 'Toyota_network.mat'
-    'motor_control', 'LQR_network.mat'
-    'pong', 'Pong_network.mat'
-    'Lorenz', 'Lorenz_network.mat'
+    'mnist'
+    'toyota'
+    'motor_control'
+    'pong'
+    'Lorenz'
 };
 b = nan(16000, size(tasks, 1));
 for i = 1:size(tasks, 1)
     if strcmpi(tasks{i, 1}, 'Lorenz')
         modelPath = resolveDynamicalSystemModelPath(repoRoot, tasks{i, 1}, options);
     else
-        modelPath = resolveModelPath(repoRoot, tasks{i, 1}, tasks{i, 2}, options);
+        modelPath = resolveModelPath(repoRoot, tasks{i, 1}, options);
     end
     Snet = load(modelPath);
     net = loadNetworkObject(Snet, modelPath);
@@ -590,6 +570,7 @@ if options.TestICPerturbationScale > 0
     x0Norm = x0Norm + double(options.TestICPerturbationScale) * (2*rand(stream, size(x0Norm)) - 1);
 end
 x0Norm = x0Norm(:);
+banff.assertDerivativeTestInputs(Snet,x0Norm);
 
 odeOptions = odeset();
 tRequest = odeRequestTimes(options.ClosedLoopTspan, options.ClosedLoopOutputDt);
@@ -650,7 +631,7 @@ end
 function dxNormDt = trueStandardizedDerivative(dynamicsName, xNorm, stats)
 xNorm = double(xNorm(:));
 xRaw = inverseStateStandardization(xNorm.', stats).';
-dxRawDt = dynamicsDerivative(dynamicsName, xRaw);
+dxRawDt = banff.shared.dynamicsDerivative(dynamicsName, xRaw);
 scale = 1;
 if isfield(stats, 'scale'), scale = stats.scale; end
 dxNormDt = scale * (dxRawDt(:) ./ stats.sigma(:));
@@ -664,17 +645,6 @@ dxdt = y(:) - x;
 if any(~isfinite(dxdt)) || any(abs(dxdt) > 1e6)
     dxdt(:) = NaN;
 end
-end
-
-function dx = dynamicsDerivative(dynamicsName, x)
-inputSize = size(x);
-if isvector(x)
-    x = x(:);
-    inputSize = size(x);
-end
-dx = int_dyn(x, string(dynamicsName), 0, 0, 0, 'Simulate');
-assert(isequal(size(dx), inputSize), '%s derivative returned size [%s] for input size [%s].', ...
-    dynamicsName, num2str(size(dx)), num2str(inputSize));
 end
 
 function [plotData, videoPlotData] = simulatePongForPlot(net)

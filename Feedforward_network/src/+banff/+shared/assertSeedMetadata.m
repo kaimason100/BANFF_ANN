@@ -1,0 +1,9 @@
+function assertSeedMetadata(S, task, seedValue, seedList)
+    assert(isfield(S, 'metadata'), '%s seed %d lacks metadata.', task, seedValue);
+    assert(isfield(S.metadata, 'task') && strcmp(char(S.metadata.task), char(task)), ...
+        '%s seed %d metadata task does not match the tested task.', task, seedValue);
+    assert(isfield(S.metadata, 'seed') && isequal(double(S.metadata.seed), double(seedValue)), ...
+        '%s seed %d metadata seed does not match the file label.', task, seedValue);
+    assert(isfield(S.metadata, 'seedList') && all(ismember(double(seedList(:)), double(S.metadata.seedList(:)))), ...
+        '%s seed %d metadata seed list does not match this test script.', task, seedValue);
+end

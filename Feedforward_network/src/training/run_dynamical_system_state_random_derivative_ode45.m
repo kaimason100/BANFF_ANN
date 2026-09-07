@@ -16,7 +16,7 @@ if nargin < 3 || isempty(trainingOptions)
     trainingOptions = struct();
 end
 
-repoRoot = locateRepoRoot();
+repoRoot = banff.shared.locateRepoRoot();
 addReleasePaths(repoRoot);
 
 totalEpochs = getOption(trainingOptions, 'TotalEpochs', 100000);
@@ -76,6 +76,8 @@ function trainDynamicalSystemDerivativeSeed(repoRoot, ii, weightSeed, totalEpoch
     [XTrain, YTrain] = randomStateSpaceDerivativeTrainingSamples(dynamicsName, stateStats, d, randomSamplesPerEpoch, initialSampleRng, stateRandomRange);
     validationRng = RandStream('mt19937ar', 'Seed', double(validationRandomSeed));
     [XValidation, YValidation] = randomStateSpaceDerivativeTrainingSamples(dynamicsName, stateStats, d, double(validationSampleCount), validationRng, stateRandomRange);
+    assert(isempty(intersect(single(XTrain),single(XValidation),'rows')), ...
+        'Derivative-field training and validation contain identical effective inputs. Use different sample RNG seeds.');
     fprintf('[%s seed %d] fixed state-random derivative-field training | scaled range [%g %g] | training samples: %d | training RNG seed: %d\n', ...
         dynamicsName, weightSeed, stateRandomRange(1), stateRandomRange(2), randomSamplesPerEpoch, double(sampleRandomSeed));
     fprintf('[%s seed %d] derivative-field validation | scaled range [%g %g] | fixed validation samples: %d | validation RNG seed: %d\n', ...
@@ -116,6 +118,16 @@ function trainDynamicalSystemDerivativeSeed(repoRoot, ii, weightSeed, totalEpoch
         sourceSave = load(sourcePath);
         assert(isfield(sourceSave, 'net') && isa(sourceSave.net, 'dlnetwork'), '%s seed %d source file does not contain dlnetwork net.', dynamicsName, weightSeed);
         assert(isfield(sourceSave, 'stateStats'), '%s seed %d source file lacks stateStats.', dynamicsName, weightSeed);
+        assert(isfield(sourceSave,'metadata') && strcmp(sourceSave.metadata.task,char(dynamicsName)) ...
+            && isequal(double(sourceSave.metadata.seed),double(weightSeed)), ...
+            'banff:SourceMismatch','Continuation source task/seed does not match.');
+        fields = {'sampleRandomSeed','validationRandomSeed','randomSamplesPerEpoch','validationSampleCount','stateRandomRange'};
+        expected = {sampleRandomSeed,validationRandomSeed,randomSamplesPerEpoch,validationSampleCount,stateRandomRange};
+        for fieldIndex = 1:numel(fields)
+            key = fields{fieldIndex};
+            assert(isfield(sourceSave.metadata,key) && isequal(double(sourceSave.metadata.(key)(:)),double(expected{fieldIndex}(:))), ...
+                'banff:SourceMismatch','Continuation source %s differs; fixed samples would change.',key);
+        end
         assertStatsClose(sourceSave.stateStats.mu, stateStats.mu, dynamicsName, 'source state mean');
         assertStatsClose(sourceSave.stateStats.sigma, stateStats.sigma, dynamicsName, 'source state max-absolute scale');
         assertStatsClose(sourceSave.stateStats.scale, stateStats.scale, dynamicsName, 'source state scale');
@@ -302,10 +314,10 @@ function trainDynamicalSystemDerivativeSeed(repoRoot, ii, weightSeed, totalEpoch
     metadata.sourceMetadata = sourceMetadata;
 
     modelPath = stateRandomDerivativeSeededNetworkPath(repoRoot, char(dynamicsName), weightSeed, outputNetworkSet, true);
-    save(modelPath, 'net', 'trainingInfo', 'split', 'stateStats', 'metadata', 'validationInfo', '-v7.3');
+    dataAudit = struct('XTrain',XTrain,'YTrain',YTrain,'XValidation',XValidation,'YValidation',YValidation);
+    save(modelPath, 'net', 'trainingInfo', 'split', 'stateStats', 'metadata', 'validationInfo', 'dataAudit', '-v7.3');
     fprintf('[%s seed %d] saved best derivative-field model from epoch %d to %s\n', dynamicsName, weightSeed, bestEpoch, modelPath);
 end
-
 
 function value = getOption(options, fieldName, defaultValue)
     value = defaultValue;
@@ -463,39 +475,6 @@ function net = setBiasLearnables(net, biasMask, biasValues)
     learnables = net.Learnables;
     learnables.Value(biasMask) = biasValues;
     net.Learnables = learnables;
-end
-
-function repoRoot = locateRepoRoot()
-    starts = string.empty;
-    scriptPath = mfilename('fullpath');
-    if ~isempty(scriptPath)
-        starts(end+1) = string(fileparts(scriptPath)); %#ok<AGROW>
-    end
-    stack = dbstack('-completenames');
-    for k = 1:numel(stack)
-        if isfield(stack(k), 'file') && ~isempty(stack(k).file)
-            starts(end+1) = string(fileparts(stack(k).file)); %#ok<AGROW>
-        end
-    end
-    starts(end+1) = string(pwd);
-    for s = starts
-        candidate = char(s);
-        while ~isempty(candidate)
-            if isfolder(fullfile(candidate, 'examples')) && isfolder(fullfile(candidate, 'src'))
-                repoRoot = candidate;
-                return
-            end
-            nestedCandidate = fullfile(candidate, 'Feedforward_network');
-            if isfolder(fullfile(nestedCandidate, 'examples')) && isfolder(fullfile(nestedCandidate, 'src'))
-                repoRoot = nestedCandidate;
-                return
-            end
-            parent = fileparts(candidate);
-            if strcmp(parent, candidate), break; end
-            candidate = parent;
-        end
-    end
-    error('Could not locate release root. Run from inside the release folder.');
 end
 
 function addReleasePaths(repoRoot)
