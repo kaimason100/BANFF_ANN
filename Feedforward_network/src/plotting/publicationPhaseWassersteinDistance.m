@@ -1,0 +1,19 @@
+function distance = publicationPhaseWassersteinDistance(plotData, options)
+%PUBLICATIONPHASEWASSERSTEINDISTANCE Use test-grid trajectories, not adaptive rows.
+assert(isfield(plotData,'phaseWD'), 'banff:MissingTestGrid', ...
+    'Regenerate DS publication plot data with FORCE_REGENERATE=true to obtain test-grid WD trajectories.');
+D = plotData.phaseWD;
+assert(isfield(D,'time') && isfield(D,'true') && isfield(D,'output') && isfield(D,'outputDt'), ...
+    'banff:MissingTestGrid','Incomplete publication WD trajectory data; regenerate it.');
+assert(isequal(size(D.true),size(D.output)) && size(D.true,1)==numel(D.time), ...
+    'banff:InvalidTestGrid','Publication WD trajectory dimensions differ.');
+assert(numel(D.time)>2 && all(isfinite(D.time(:))) && all(diff(D.time(:))>0), ...
+    'banff:InvalidTestGrid','Publication WD requires increasing, finite output times.');
+assert(isscalar(D.outputDt) && isfinite(D.outputDt) && D.outputDt>0, ...
+    'banff:InvalidTestGrid','Invalid WD output spacing.');
+steps = diff(double(D.time(:)));
+tol = 100*eps(max(1,max(abs(double(D.time(:))))));
+assert(all(abs(steps(1:end-1)-D.outputDt)<=tol) && steps(end)<=D.outputDt+tol, ...
+    'banff:InvalidTestGrid','WD data are not on the requested uniform test grid.');
+distance = phasePortraitWassersteinDistance(D.output,D.true,options);
+end

@@ -170,3 +170,12 @@ schedule. These tests and full training have **not been executed** during this
 refactor because MATLAB execution was not authorised. Static source parsing,
 Live Script archive/XML checks and shell syntax checks are narrower checks,
 not publication-result reproduction.
+
+## Batch Size Metadata
+
+For tabular tasks, an empty `MiniBatchSize` selects the historical
+dataset-specific value (Iris 150; breast cancer and car quality 256;
+mushroom 4096; Abalone the loaded row count; Toyota the smaller of 4096 and
+the loaded row count). The resolved value is saved in
+`metadata.trainingOptions.MiniBatchSize`. An explicit positive integer
+override is honoured. Existing saved metadata are not rewritten.

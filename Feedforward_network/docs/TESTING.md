@@ -89,12 +89,41 @@ training- or validation-sampling settings.
 
 ## Numerical reproducibility
 
-Tests are CPU-only where practical and all explicit random seeds are fixed.
+All explicit random seeds are fixed. Testing does not require CPU-only
+execution: some prediction paths select an available GPU automatically.
 Small numerical differences can still occur across machines because MATLAB may
 use different CPU math libraries and ODE step decisions on different platforms.
 For chaotic closed-loop dynamical systems, those differences can grow over long
 rollouts. This is expected numerical sensitivity rather than a change in saved
 weights or data splits.
+
+## Identity Checks And Publication WD
+
+DS tests and publication generation reject models whose saved task or seed
+differs from the requested pair. Continuations must declare the requested base
+network set. New continuations also save a SHA-256 hash of their source file;
+evaluation rejects them if that base file has subsequently changed. Older
+continuations remain usable but emit an explicit warning when no source hash
+is available. Their exact source-file provenance cannot be verified retrospectively.
+
+Pong and motor-control tests accept a subset of the saved seed list; each
+loaded model must still match the individual requested seed.
+
+Publication DS WD now uses separately saved uniform-grid trajectories in
+`plotData.phaseWD`. Its default output interval is `0.01`, matching the main
+DS test, with the same sliced-Wasserstein calculation and default options.
+The plotting/activation time grid is unchanged and is not used for WD.
+Generating these metric trajectories can require an additional pair of ODE
+integrations. Only the state trajectories, not hidden activations, are saved
+on the dense metric grid.
+
+Regenerate DS publication data with `FORCE_REGENERATE = true` before using
+the updated phase-portrait scripts. Old files without metric trajectories
+produce an actionable error rather than reporting adaptive-grid WD.
+Agreement with a particular test additionally requires the same saved network,
+IC, simulation duration, ODE settings and WD options. Generation defaults to
+MATLAB ODE tolerances and `PhaseWDOutputDt = 0.01`; custom test settings must
+be matched deliberately.
 
 ## Weight consistency
 

@@ -15,6 +15,7 @@ arguments
     options.ClosedLoopTspan (1,2) double = [0 5000]
     options.LorenzClosedLoopTspan (1,2) double = [0 5000]
     options.ClosedLoopOutputDt = []
+    options.PhaseWDOutputDt (1,1) double = 0.01
     options.ManualInitialCondition = []
     options.DynamicalSystemNetworkSet (1,1) string = "seeded_state_random_derivative_ode45_lr_0p01"
     options.UseContinuationIfAvailable (1,1) logical = true
@@ -122,8 +123,10 @@ for name = names
     end
     [modelPath, selectedNetworkSet, usedContinuation] = resolveDynamicalSystemModelPath(repoRoot, char(name), dynamicsOptions);
     Snet = load(modelPath);
+    basePath = seededDynamicalSystemPath(repoRoot, dynamicsOptions.DynamicalSystemNetworkSet, char(name), options.Seed);
+    banff.assertDerivativeModelIdentity(Snet, char(name), options.Seed, basePath, usedContinuation);
     net = loadNetworkObject(Snet, modelPath);
-    [t, xTrue, xPred, activations1, activations2] = dynamicalClosedLoop(repoRoot, net, Snet, char(name), dynamicsOptions);
+    [t, xTrue, xPred, activations1, activations2, phaseWD] = dynamicalClosedLoop(repoRoot, net, Snet, char(name), dynamicsOptions);
     plotData.time = t;
     plotData.true = xTrue;
     plotData.output = xPred;
@@ -137,6 +140,8 @@ for name = names
     plotData.networkPath = modelPath;
     plotData.closedLoopTspan = dynamicsOptions.ClosedLoopTspan;
     plotData.closedLoopOutputDt = dynamicsOptions.ClosedLoopOutputDt;
+    % WD uses the test script's uniform grid, independently of activation sampling.
+    plotData.phaseWD = phaseWD;
     plotData.testICRandomSeed = dynamicsOptions.TestICRandomSeed;
     plotData.testICPerturbationScale = dynamicsOptions.TestICPerturbationScale;
     save(outFile, 'plotData', '-v7.3');
@@ -555,7 +560,7 @@ end
 save(outFile, 'b', '-v7.3');
 end
 
-function [t, xTrue, xPred, A1, A2] = dynamicalClosedLoop(repoRoot, net, Snet, dynamicsName, options)
+function [t, xTrue, xPred, A1, A2, phaseWD] = dynamicalClosedLoop(repoRoot, net, Snet, dynamicsName, options)
 assert(isfield(Snet, 'stateStats'), '%s saved network lacks stateStats.', dynamicsName);
 assert(isa(net, 'dlnetwork'), '%s publication plot data requires the derivative-field dlnetwork.', dynamicsName);
 dyn = readtable(fullfile(repoRoot, 'examples', 'dynamical_systems', 'dynamics_list.xlsx'));
@@ -584,6 +589,22 @@ else
     assert(isequal(size(tPred), size(t)), '%s learned and true trajectories have different output times.', dynamicsName);
 end
 assert(isequal(size(xPred), size(xTrue)), '%s learned and true trajectories differ in size.', dynamicsName);
+% Match the test's requested output times, not the adaptive row distribution.
+% Only three-state trajectories use the dense grid; hidden activations retain
+% the existing plotting grid to avoid allocating hundreds of GB.
+validateattributes(options.PhaseWDOutputDt,{'numeric'},{'scalar','positive','finite'});
+tWD = odeRequestTimes(options.ClosedLoopTspan, options.PhaseWDOutputDt);
+if isequal(t(:),tWD(:))
+    trueWD = xTrue;
+    predWD = xPred;
+else
+    [tTrueWD,trueWD] = ode45(@(tt,xx) trueStandardizedDerivative(dynamicsName,xx,Snet.stateStats), tWD, x0Norm, odeOptions);
+    [tPredWD,predWD] = ode45(@(tt,xx) learnedDerivativeFieldPredict(net,xx), tWD, x0Norm, odeOptions);
+    assert(isequal(tTrueWD(:),tWD(:)) && isequal(tPredWD(:),tWD(:)), ...
+        'banff:IncompleteRollout','%s WD rollout did not reach every requested test time.',dynamicsName);
+end
+phaseWD = struct('time',tWD(:),'true',trueWD,'output',predWD, ...
+    'outputDt',options.PhaseWDOutputDt);
 A1 = hiddenActivations(net, xPred.', "first");
 A2 = hiddenActivations(net, xPred.', "last");
 end

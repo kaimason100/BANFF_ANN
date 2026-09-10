@@ -109,6 +109,7 @@ function trainDynamicalSystemDerivativeSeed(repoRoot, ii, weightSeed, totalEpoch
     fprintf('[%s seed %d] training execution device: %s\n', dynamicsName, weightSeed, executionDevice);
 
     sourcePath = '';
+    sourceNetworkSHA256 = '';
     sourceMetadata = struct();
     sourceValidationInfo = struct();
     if continueFromSource
@@ -116,6 +117,7 @@ function trainDynamicalSystemDerivativeSeed(repoRoot, ii, weightSeed, totalEpoch
         sourcePath = stateRandomDerivativeSeededNetworkPath(repoRoot, char(dynamicsName), weightSeed, sourceNetworkSet, false);
         assert(isfile(sourcePath), 'Missing source derivative-field network for continuation: %s', sourcePath);
         sourceSave = load(sourcePath);
+        sourceNetworkSHA256 = banff.fileSHA256(sourcePath);
         assert(isfield(sourceSave, 'net') && isa(sourceSave.net, 'dlnetwork'), '%s seed %d source file does not contain dlnetwork net.', dynamicsName, weightSeed);
         assert(isfield(sourceSave, 'stateStats'), '%s seed %d source file lacks stateStats.', dynamicsName, weightSeed);
         assert(isfield(sourceSave,'metadata') && strcmp(sourceSave.metadata.task,char(dynamicsName)) ...
@@ -310,6 +312,7 @@ function trainDynamicalSystemDerivativeSeed(repoRoot, ii, weightSeed, totalEpoch
     metadata.continuation = continueFromSource;
     metadata.sourceNetworkSet = char(sourceNetworkSet);
     metadata.sourceNetworkPath = char(sourcePath);
+    metadata.sourceNetworkSHA256 = sourceNetworkSHA256;
     metadata.continuationLabel = char(continuationLabel);
     metadata.sourceMetadata = sourceMetadata;
 

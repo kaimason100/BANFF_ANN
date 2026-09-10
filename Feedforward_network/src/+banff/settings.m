@@ -5,7 +5,10 @@ cfg = struct('Width',16000,'MaxEpochs',1000,'LearnRate',0.01, ...
     'MiniBatchSize',500,'SplitSeed',42,'Plots',true, ...
     'ExecutionEnvironment','auto','NetworkSet','seeded_grouped');
 switch char(task)
-    case 'abalone', cfg.SplitSeed = 1;
+    case {'iris','breast_cancer','car_quality','mushroom','abalone','toyota'}
+        % Empty selects the historical dataset-specific batch size.
+        cfg.MiniBatchSize = [];
+        if strcmp(char(task),'abalone'), cfg.SplitSeed = 1; end
     case 'Pong'
         cfg.MaxEpochs = 20000; cfg.LearnRate = 0.001; cfg.MiniBatchSize = 1000;
     case 'LQR_two_link_arm'
@@ -19,4 +22,7 @@ end
 validateattributes(cfg.MaxEpochs,{'numeric'},{'scalar','integer','positive','finite'});
 validateattributes(cfg.Width,{'numeric'},{'scalar','integer','positive','<=',16000});
 validateattributes(cfg.LearnRate,{'numeric'},{'scalar','positive','finite'});
+if ~isempty(cfg.MiniBatchSize)
+    validateattributes(cfg.MiniBatchSize,{'numeric'},{'scalar','integer','positive','finite'});
+end
 end

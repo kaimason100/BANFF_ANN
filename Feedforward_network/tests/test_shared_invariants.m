@@ -71,3 +71,43 @@ function testEffectivePrecisionCollisionIsRejected(testCase)
 verifyError(testCase,@() banff.assertNoSharedInputs(single(1),single(1+1e-9),'precision'), ...
     'banff:DuplicateLeakage');
 end
+
+function testDerivativeIdentity(testCase)
+S.metadata = struct('task','Lorenz','seed',2, ...
+    'trainingSamplingMode','state-random-derivative-field');
+banff.assertDerivativeModelIdentity(S,'Lorenz',2);
+verifyError(testCase,@() banff.assertDerivativeModelIdentity(S,'MO0',2),'banff:ModelIdentity');
+verifyError(testCase,@() banff.assertDerivativeModelIdentity(S,'Lorenz',3),'banff:ModelIdentity');
+S.metadata.sourceNetworkSet = 'other';
+base = fullfile(tempdir,'base','Lorenz','Lorenz_seed_002_network.mat');
+verifyError(testCase,@() banff.assertDerivativeModelIdentity(S,'Lorenz',2,base,true),'banff:ModelIdentity');
+S.metadata.sourceNetworkSet = 'base';
+verifyWarning(testCase,@() banff.assertDerivativeModelIdentity(S,'Lorenz',2,base,true), ...
+    'banff:UnverifiedContinuationSource');
+S.metadata.sourceNetworkSHA256 = 'deliberately-invalid';
+verifyError(testCase,@() banff.assertDerivativeModelIdentity(S,'Lorenz',2,base,true),'banff:ModelIdentity');
+end
+
+function testTabularBatchOptions(testCase)
+for task = {'iris','breast_cancer','car_quality','mushroom','abalone','toyota'}
+    cfg = banff.settings(task{1});
+    verifyEmpty(testCase,cfg.MiniBatchSize);
+    cfg = banff.settings(task{1},struct('MiniBatchSize',23));
+    verifyEqual(testCase,cfg.MiniBatchSize,23);
+end
+end
+
+function testPublicationWDUsesMetricGrid(testCase)
+t = (0:0.01:2).';
+X = [sin(t),cos(t),sin(2*t)];
+D.phaseWD = struct('time',t,'true',X,'output',X+0.1,'outputDt',0.01);
+% Deliberately different plotting data must not affect the reported metric.
+D.true = zeros(3); D.output = ones(3);
+options = struct('NumProjections',128,'TrimFraction',0.1, ...
+    'Subsample',5,'TransientFraction',0.1,'MaxPoints',1250);
+verifyEqual(testCase,publicationPhaseWassersteinDistance(D,options), ...
+    phasePortraitWassersteinDistance(X+0.1,X,options));
+D.phaseWD.time(2) = 0.009;
+verifyError(testCase,@() publicationPhaseWassersteinDistance(D,options),'banff:InvalidTestGrid');
+verifyError(testCase,@() publicationPhaseWassersteinDistance(struct(),options),'banff:MissingTestGrid');
+end
