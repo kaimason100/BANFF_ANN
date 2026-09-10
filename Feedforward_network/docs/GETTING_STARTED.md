@@ -216,11 +216,7 @@ trained_networks/seeded_grouped/Pong/Pong_seed_<seed>_network.mat
 Pong trains for `20000` epochs with Adam learning rate `0.001`.
 
 The Pong test is closed-loop: it simulates games and counts successful network
-paddle contacts and misses. To play or visualize Pong separately, use:
-
-```matlab
-run("examples/pong/playPong.mlx")
-```
+paddle contacts and misses.
 
 ## 8. Motor-control training
 

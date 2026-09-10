@@ -159,7 +159,6 @@ const files = [
 ];
 
 for (const relPath of files) {
-  if (relPath.endsWith("playPong.mlx")) continue;
   let code = readMlxCode(relPath);
   const before = code;
   if (relPath.includes("examples/dynamical_systems/")) {

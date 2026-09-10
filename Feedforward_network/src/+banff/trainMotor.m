@@ -77,9 +77,9 @@ dataAudit = struct('XTrain',XTrainAll,'YTrain',YTrainAll,'XValidation',XValAll, 
 layers = [
     featureInputLayer(numInputs, 'Normalization', 'none', 'Name', 'input')
     fullyConnectedLayer(cfg.Width, 'Name', 'fc1', 'WeightsInitializer', @customWeights1_git, 'WeightLearnRateFactor', 0, 'BiasInitializer', 'zeros')
-    tanhLayer('Name', 'relu1')
+    tanhLayer('Name', 'tanh1')
     fullyConnectedLayer(cfg.Width, 'Name', 'fc2', 'WeightsInitializer', @customWeights2_git, 'WeightLearnRateFactor', 0, 'BiasInitializer', 'zeros')
-    tanhLayer('Name', 'relu2')
+    tanhLayer('Name', 'tanh2')
     fullyConnectedLayer(2, 'Name', 'fc3', 'WeightsInitializer', @customWeights3_git, 'WeightLearnRateFactor', 0, 'BiasInitializer', 'zeros')
     regressionLayer];
 

@@ -19,7 +19,7 @@ This document describes the `Feedforward_network` package.
   dynamical-system trainers, including full-batch, single-seed, and continuation
   wrappers.
 - `examples/control` contains the active seeded LQR two-link-arm trainer.
-- `examples/pong` contains the active seeded Pong trainer and playback script.
+- `examples/pong` contains the active seeded Pong trainer.
 - `tests` contains active seeded tests and seeded weight-consistency checks.
 - `src/initializers` contains the deterministic frozen-weight initializers.
 - `src/preprocessing` contains the audited non-finite-value handling helper.
