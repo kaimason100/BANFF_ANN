@@ -26,10 +26,8 @@ This repository contains the software accompanying the article:
 > Synaptic Connectivity*. **Communications Biology** (accepted; final volume,
 > article number, and journal DOI pending).
 
-Wilten Nicola is the corresponding author. Until the final journal record is
-available, cite the [bioRxiv preprint](https://doi.org/10.1101/2025.10.05.680523)
-alongside this repository. `CITATION.cff` provides machine-readable citation
-metadata for GitHub and reference managers.
+Wilten Nicola is the corresponding author. `CITATION.cff` provides
+machine-readable citation metadata for GitHub and reference managers.
 
 ## Repository Scope
 
