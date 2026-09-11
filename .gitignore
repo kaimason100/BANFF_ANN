@@ -19,6 +19,9 @@ Feedforward_network/publication/plots/*.fig
 Feedforward_network/publication/plots/*.png
 Feedforward_network/publication/plots/*.jpg
 
+# Local comparison tool for unreleased original DS models
+Feedforward_network/tests/test_dynamical_systems_seeded_state_random_derivative_ode45_original_models.m
+
 # The recurrent source package is part of the public release. These explicit
 # inclusions override any broad local excludes when new recurrent scripts are
 # added.
