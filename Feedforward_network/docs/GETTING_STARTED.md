@@ -84,7 +84,7 @@ assertSuccess(results)
 run('publication/plot_data_generation/generate_all_plot_data.mlx')
 ```
 
-Generators default to representative seed 9. Change `SEED` deliberately and
+Generators default to seed 9. Change `SEED` deliberately and
 regenerate cached files after changing models or settings. Individual
 generators are available for MNIST, Toyota, DS, Pong, the arm and bias histograms.
 Then run the required figure script under `publication/plots`.
