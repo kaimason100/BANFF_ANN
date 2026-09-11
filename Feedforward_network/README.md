@@ -4,8 +4,8 @@ MATLAB code for the seeded feedforward experiments accompanying *Rapidly
 Reconfigurable Dynamic Computing in Neural Networks with Fixed Synaptic
 Connectivity*. Network weights are fixed; neuronal biases are trained.
 
-Start with [Getting Started](docs/GETTING_STARTED.md). Prepared datasets are
-included; trained networks and generated outputs are not distributed.
+Start with [Getting Started](docs/GETTING_STARTED.md). Dataset files, trained
+networks, and generated outputs are not distributed.
 
 ## Workflow
 

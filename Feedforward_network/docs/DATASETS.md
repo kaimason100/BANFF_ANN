@@ -1,16 +1,16 @@
 # Dataset Provenance And Preparation
 
-The public repository includes the prepared MAT files used for the released
-experiments in `Feedforward_network/data`. Their SHA-256 digests are recorded
-in `data/SHA256SUMS`. These prepared copies are redistributed under their
-respective upstream dataset licences, not under the repository's MIT licence.
+The public repository does not include third-party dataset files. Obtain each
+dataset from the source below and create the required MAT file in
+`Feedforward_network/data`. That directory is ignored by Git so local copies
+are not accidentally redistributed.
 
 Do not normalize the complete dataset before saving or replacing a file. Active
 trainers fit all normalization statistics on the training split only. Tabular
 predictors are subsequently divided by the square root of the predictor count.
 MNIST-family images are standardized per pixel from the training images and
-divided by `sqrt(784)`. These operations are performed by the trainers and were
-not pre-applied to the supplied dataset files.
+divided by `sqrt(784)`. These operations are performed by the trainers and must
+not be pre-applied to the locally prepared dataset files.
 
 ## Required Files
 
@@ -48,23 +48,20 @@ dynamical-system definition file is already included as
 | `kmnist.mat` | Kuzushiji-MNIST, ROIS-DS CODH | CC BY-SA 4.0 |
 | `afro_mnist_*.mat` | Afro-MNIST, Wu, Yang and Prabhu | MIT |
 
-The supplied MAT files are format conversions and categorical encodings of the
+The required MAT files are format conversions and categorical encodings of the
 identified sources. Attribution, source links, and applicable licence links are
-also collected in the repository-level `THIRD_PARTY_NOTICES.md`. Share-alike
-terms continue to apply to the corresponding prepared MNIST and KMNIST files.
+also collected in the repository-level `THIRD_PARTY_NOTICES.md`.
 
-## Local Availability And Data Handling
+## Local Preparation And Data Handling
 
-The exact prepared MAT files used by the released local workflows are included
-in `Feedforward_network/data`. No separate dataset download or conversion is
-required to run the supplied training and testing scripts. The upstream links
-below document provenance and allow independent reconstruction; they are not
-runtime dependencies. File integrity can be checked against
-`Feedforward_network/data/SHA256SUMS`.
+Download the raw datasets from the upstream links below, convert them to the
+documented structures, and save the resulting files in `Feedforward_network/data`.
+Training and testing stop with a missing-file error until the required local
+files exist.
 
 All active loaders route non-finite observation replacement through
-`replaceNonfiniteDatasetValues`. In the supplied files this replacement changes
-only `car_dataset.mat`:
+`replaceNonfiniteDatasetValues`. For the documented Car preparation this
+replacement changes only `car_dataset.mat`:
 
 - the stored matrix contains 432 NaNs in column 3, representing the legitimate
   `doors = 5more` category;
@@ -81,16 +78,16 @@ released file, the scripts issue warning identifier
 `BANFF:UnexpectedDatasetImputation` instead.
 
 The original Mushroom data use `?` for 2,480 unknown `stalk-root` entries. In
-the supplied `mushroom_dataset.mat`, these entries are deliberately retained as
-the fifth categorical code in that predictor rather than represented by NaN or
-zero. The supplied Mushroom matrix therefore contains neither NaNs nor zeros.
+the required `mushroom_dataset.mat`, retain these entries as the fifth
+categorical code in that predictor rather than representing them by NaN or
+zero. The resulting Mushroom matrix therefore contains neither NaNs nor zeros.
 When this dataset is loaded, the scripts print an informational message
 confirming this encoding and that no runtime imputation was performed. A
 different shape, category count, or any non-finite value triggers
 `BANFF:UnexpectedDatasetImputation`.
 
-The supplied Abalone, Breast Cancer, Toyota and MNIST-family MAT files contain
-no NaN or infinite values. Their stored zeros are data values, class labels or
+The locally prepared Abalone, Breast Cancer, Toyota and MNIST-family MAT files
+should contain no NaN or infinite values. Their stored zeros are data values, class labels or
 image background pixels, rather than values introduced by the runtime
 non-finite-value replacement. Consequently, the same defensive statements are
 no-ops for those files.
@@ -144,8 +141,8 @@ Convert each raw categorical column with one fixed mapping. Record and reuse
 that mapping; independently applying `grp2idx` to subsets can change the code
 assigned to a category.
 
-The supplied publication dataset preserves the historical preparation used for
-the reported experiments: `5more` in the doors column and `more` in the persons
+To reproduce the historical preparation used for the reported experiments,
+store `5more` in the doors column and `more` in the persons
 column are stored as NaN and converted to the reserved code zero by every active
 training and testing loader. These are category encodings, not missing values.
 
@@ -161,7 +158,7 @@ Save `data/mushroom_dataset.mat` containing a numeric matrix named `data`:
 
 Use one mapping per original column and apply it before the trainer creates its
 split. The original `?` entries for unknown stalk root are a distinct category;
-the supplied matrix encodes that category as `5`. They are not imputed from
+encode that category as `5`. These entries are not imputed from
 training, validation, or test observations.
 
 ## Regression

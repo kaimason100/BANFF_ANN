@@ -1,8 +1,8 @@
 # Getting started
 
 Run these commands from the `Feedforward_network` folder in MATLAB.
-The repository includes prepared datasets; models, figures and generated
-results are produced locally.
+Dataset files, models, figures, and generated results are produced or prepared
+locally.
 
 ## Setup
 
@@ -15,8 +15,8 @@ is optional.
 run('setup.m')
 ```
 
-Dataset formats, preprocessing and checksums are documented in
-[DATASETS.md](DATASETS.md). Do not pre-normalize the supplied data: training
+Download sources and prepare the required MAT files by following
+[DATASETS.md](DATASETS.md). Do not pre-normalize the prepared data: training
 fits normalization statistics on training samples and saves them for testing.
 
 ## Train
