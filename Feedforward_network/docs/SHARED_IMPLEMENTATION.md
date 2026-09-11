@@ -1,9 +1,8 @@
-# Shared Implementation Branch
+# Shared training and publication workflow
 
-This branch changes only the feedforward package. The recurrent package is
-unchanged. It is not a new publication release and does not replace the archived
-publication results. Local MATLAB and Slurm jobs now call the **same functions**;
-there is no separate numerical ARC implementation to synchronise.
+Local MATLAB and Slurm jobs call the same feedforward training functions.
+The recurrent package is independent. Earlier tagged releases retain their
+original code and results.
 
 ## Start Here
 

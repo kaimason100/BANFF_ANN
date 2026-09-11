@@ -1,10 +1,5 @@
 # Feedforward Package Structure
 
-This is the shared-implementation development branch. Start with
-[the branch workflow and leakage policy](SHARED_IMPLEMENTATION.md) for the single publication
-schedule, shared local/Slurm entry points, corrected grouped splits and
-verification limitations. Existing publication releases are unchanged.
-
 This repository is organized as a seeded MATLAB live-script release. Active
 user-facing scripts are `.mlx` files.
 

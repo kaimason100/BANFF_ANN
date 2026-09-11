@@ -4,8 +4,7 @@ For the full project run order, including when to generate plot data, see
 `docs/GETTING_STARTED.md`.
 
 `publication/plots` contains the legacy publication-figure live scripts. Those
-scripts only load plot-data MAT files and make figures; they do not regenerate
-data, load saved networks, or change plotting dependencies.
+scripts normally load prepared plot-data MAT files. The bias-histogram script can also generate missing data from saved networks.
 
 `publication/plot_data_generation` contains the scripts that create the
 `*_plot_data.mat` files used by the plots.

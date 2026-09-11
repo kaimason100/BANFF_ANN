@@ -27,6 +27,6 @@ Required dataset files for a full local run are:
 `fisheriris` is loaded directly from MATLAB. Pong supervised data and
 motor-control episodes are generated inside their respective training scripts.
 Motor-control training writes
-`LQR_SUPERVISED_EPISODES_20251002_172744.mat` as a generated compatibility
+`outputs/training_data/motor_control/episodes_seed_###.mat` as a generated
 artefact; it is not a required input and is not included in the public dataset
 bundle.

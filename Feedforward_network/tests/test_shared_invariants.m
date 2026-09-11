@@ -46,6 +46,21 @@ verifyEqual(testCase,b,order(81:end));
 verifyEqual(testCase,actualRNG,rng);
 end
 
+function testControlSeedSubsets(testCase)
+for task = {'Pong','LQR_two_link_arm'}
+    S.metadata = struct('task',task{1},'seed',9,'seedList',0:9);
+    banff.shared.assertSeedMetadata(S,task{1},9,9);
+    banff.shared.assertSeedMetadata(S,task{1},9,[0 9]);
+    banff.shared.assertSeedMetadata(S,task{1},9,0:9);
+    verifyError(testCase,@() banff.shared.assertSeedMetadata(S,task{1},8,8), ...
+        '');
+    verifyError(testCase,@() banff.shared.assertSeedMetadata(S,'wrong_task',9,9), ...
+        '');
+    verifyError(testCase,@() banff.shared.assertSeedMetadata(S,task{1},9,[9 10]), ...
+        '');
+end
+end
+
 function testPublicationSchedule(testCase)
 S = banff.publicationSchedule();
 verifyEqual(testCase,height(S),250);

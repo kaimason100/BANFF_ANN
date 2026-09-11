@@ -1,10 +1,5 @@
 # Testing
 
-This is the shared-implementation development branch. Start with
-[the branch workflow and leakage policy](SHARED_IMPLEMENTATION.md) for the single publication
-schedule, shared local/Slurm entry points, corrected grouped splits and
-verification limitations. Existing publication releases are unchanged.
-
 For the full end-to-end run order, start with `docs/GETTING_STARTED.md`. This
 file focuses only on saved-network tests.
 

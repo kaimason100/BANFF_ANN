@@ -1,10 +1,5 @@
 # Dataset Provenance And Preparation
 
-This is the shared-implementation development branch. Start with
-[the branch workflow and leakage policy](SHARED_IMPLEMENTATION.md) for the single publication
-schedule, shared local/Slurm entry points, corrected grouped splits and
-verification limitations. Existing publication releases are unchanged.
-
 The public repository includes the prepared MAT files used for the released
 experiments in `Feedforward_network/data`. Their SHA-256 digests are recorded
 in `data/SHA256SUMS`. These prepared copies are redistributed under their
