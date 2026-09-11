@@ -82,6 +82,7 @@ for task = TASKS
         assert(isfield(S, 'metadata'), '%s seed %d lacks metadata.', task, seedValue);
         assert(isfield(S.metadata, 'trainingSamplingMode') && strcmp(char(S.metadata.trainingSamplingMode), 'state-random-derivative-field'), ...
             '%s seed %d was not trained with the derivative-field implementation.', task, seedValue);
+        [testNet, useGPU, executionDevice] = banff.shared.prepareNetworkForAutoExecution(S.net);
         seedFigureDir = fullfile(figureDir, sprintf('%s_seed_%03d', matlab.lang.makeValidName(char(task)), double(seedValue)));
         if exist(seedFigureDir, 'dir') ~= 7, mkdir(seedFigureDir); end
 
@@ -93,11 +94,11 @@ for task = TASKS
         banff.assertDerivativeTestInputs(S,x0Norm);
 
         odeOptions = makeOdeOptions(relTol, absTol, maxStep);
-        fprintf('%s seed %d derivative-field test starting | network set %s | continuation=%d | rollout %.6g | output dt %.6g | evaluator predict\n', ...
-            task, seedValue, selectedNetworkSet, usedContinuation, CLOSED_LOOP_ROLLOUT_LENGTH, ODE_OUTPUT_DT);
+        fprintf('%s seed %d derivative-field test starting | network set %s | continuation=%d | rollout %.6g | output dt %.6g | evaluator predict | %s\n', ...
+            task, seedValue, selectedNetworkSet, usedContinuation, CLOSED_LOOP_ROLLOUT_LENGTH, ODE_OUTPUT_DT, executionDevice);
         testTimer = tic;
         [tTrue, xTrue] = ode45(@(t, x) trueStandardizedDerivative(task, x, S.stateStats), tEval, x0Norm(:), odeOptions);
-        [tPred, xPred] = ode45(@(t, x) learnedDerivativeFieldPredict(S.net, x), tEval, x0Norm(:), odeOptions); %#ok<ASGLU>
+        [tPred, xPred] = ode45(@(t, x) learnedDerivativeFieldPredict(testNet, x, useGPU), tEval, x0Norm(:), odeOptions); %#ok<ASGLU>
         elapsedSeconds = toc(testTimer);
         assert(isequal(size(xPred), size(xTrue)), '%s seed %d learned and true trajectories differ in size.', task, seedValue);
 
@@ -295,9 +296,13 @@ dxNormDt = stats.scale * (dxRawDt(:) ./ stats.sigma(:));
 assert(all(isfinite(dxNormDt)), '%s true standardized derivative produced non-finite values.', dynamicsName);
 end
 
-function dxdt = learnedDerivativeFieldPredict(net, x)
+function dxdt = learnedDerivativeFieldPredict(net, x, useGPU)
 x = double(x(:));
-Y = predict(net, dlarray(single(x), 'CB'));
+xInput = single(x);
+if useGPU
+    xInput = gpuArray(xInput);
+end
+Y = predict(net, dlarray(xInput, 'CB'));
 y = double(numericOutput(Y));
 dxdt = y(:) - x;
 if any(~isfinite(dxdt)) || any(abs(dxdt) > 1e6)

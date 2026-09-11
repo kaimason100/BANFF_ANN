@@ -75,6 +75,10 @@ which used learning rate `0.005`. All `MO0` seeds were then continued for
 
 By default the test automatically uses a matching continuation network if one
 exists for that task/seed, then falls back to the base derivative-field network.
+It also moves each loaded network to a supported GPU when one is available and
+runs network evaluations there. If no usable GPU is detected, evaluation stays
+on the CPU. `ode45` itself remains CPU-based; only the learned derivative-field
+predictions run on the selected device.
 The results table records `NetworkSet`, `UsedContinuation`, and `NetworkPath`.
 The same task-specific test IC is used across all weight seeds. It differs from
 the unperturbed spreadsheet IC while remaining in its local standardized
@@ -84,8 +88,8 @@ training- or validation-sampling settings.
 
 ## Numerical reproducibility
 
-All explicit random seeds are fixed. Testing does not require CPU-only
-execution: some prediction paths select an available GPU automatically.
+All explicit random seeds are fixed. DS testing selects an available GPU
+automatically and falls back to the CPU.
 Small numerical differences can still occur across machines because MATLAB may
 use different CPU math libraries and ODE step decisions on different platforms.
 For chaotic closed-loop dynamical systems, those differences can grow over long

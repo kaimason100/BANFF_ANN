@@ -66,7 +66,9 @@ run('tests/test_dynamical_systems_seeded_state_random_derivative_ode45.mlx')
 Edit `SEEDS` in the motor, Pong or DS test to select models; the DS test also
 has `TASKS`. Tests load saved models and do not retrain. Motor, Pong and DS
 tests are closed-loop. DS testing prefers an available matching continuation
-unless `USE_CONTINUATION_IF_AVAILABLE` is disabled.
+unless `USE_CONTINUATION_IF_AVAILABLE` is disabled. DS network evaluations use
+a supported GPU automatically when available and otherwise run on the CPU;
+`ode45` remains CPU-based.
 
 [TESTING.md](TESTING.md) documents metrics, ICs, continuation selection and
 numerical settings. Missing models or failed integrity checks stop evaluation.
