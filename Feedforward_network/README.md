@@ -25,7 +25,6 @@ Training overwrites existing models for the selected task and seed.
 ## Reference
 
 - [Getting started](docs/GETTING_STARTED.md): setup, training, testing and figures.
-- [Shared workflow](docs/SHARED_IMPLEMENTATION.md): exact schedule, Slurm and split policy.
 - [Datasets](docs/DATASETS.md): sources, formats, checksums and licences.
 - [Testing](docs/TESTING.md): evaluation settings and integrity checks.
 - [Publication figures](publication/README.md): plot-data generation and plotting.

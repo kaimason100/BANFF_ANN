@@ -9,8 +9,7 @@ results are produced locally.
 Use MATLAB R2023a or later with Deep Learning Toolbox and Statistics and
 Machine Learning Toolbox. The arm task requires Control System Toolbox.
 MNIST-family image preparation uses Image Processing Toolbox. GPU execution
-is optional; see [the shared workflow](SHARED_IMPLEMENTATION.md) for cluster
-requirements and resource guidance.
+is optional.
 
 ```matlab
 run('setup.m')
@@ -40,8 +39,7 @@ banff.runPublication("Pong",9,true)
 Task-specific Live Scripts are also available under `examples/classification`,
 `examples/regression`, `examples/control`, `examples/pong` and
 `examples/dynamical_systems`. Use the publication entry point when the exact
-schedule is required. For Slurm commands and experimental overrides, see
-[SHARED_IMPLEMENTATION.md](SHARED_IMPLEMENTATION.md).
+schedule is required.
 
 Dataset and control models are saved under `trained_networks/seeded_grouped`.
 DS base models use `seeded_state_random_derivative_ode45_lr_0p01`; MO0
