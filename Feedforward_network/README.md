@@ -2,7 +2,10 @@
 
 MATLAB code for the seeded feedforward experiments accompanying *Rapidly
 Reconfigurable Dynamic Computing in Neural Networks with Fixed Synaptic
-Connectivity*. Network weights are fixed; neuronal biases are trained.
+Connectivity* by Kai Mason, Sonia Sennik, Claudia Clopath, Aaron Gruber, and
+Wilten Nicola, accepted in **Communications Biology**. Network weights are
+fixed; neuronal biases are trained. See the repository README and
+`CITATION.cff` for citation details.
 
 Start with [Getting Started](docs/GETTING_STARTED.md). Dataset files, trained
 networks, and generated outputs are not distributed.

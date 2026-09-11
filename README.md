@@ -19,10 +19,17 @@ should then follow `Feedforward_network/docs/GETTING_STARTED.md` and
 
 ## Publication
 
-This repository contains the software accompanying the journal publication
-*Rapidly Reconfigurable Dynamic Computing in Neural Networks with Fixed
-Synaptic Connectivity*. Please cite the journal article using its final
-bibliographic record.
+This repository contains the software accompanying the article:
+
+> Kai Mason, Sonia Sennik, Claudia Clopath, Aaron Gruber, and Wilten Nicola.
+> *Rapidly Reconfigurable Dynamic Computing in Neural Networks with Fixed
+> Synaptic Connectivity*. **Communications Biology** (accepted; final volume,
+> article number, and journal DOI pending).
+
+Wilten Nicola is the corresponding author. Until the final journal record is
+available, cite the [bioRxiv preprint](https://doi.org/10.1101/2025.10.05.680523)
+alongside this repository. `CITATION.cff` provides machine-readable citation
+metadata for GitHub and reference managers.
 
 ## Repository Scope
 

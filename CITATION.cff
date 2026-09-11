@@ -15,3 +15,19 @@ authors:
   - family-names: Nicola
     given-names: Wilten
 repository-code: "https://github.com/kaimason100/BANFF_ANN"
+preferred-citation:
+  type: article
+  title: "Rapidly Reconfigurable Dynamic Computing in Neural Networks with Fixed Synaptic Connectivity"
+  authors:
+    - family-names: Mason
+      given-names: Kai
+    - family-names: Sennik
+      given-names: Sonia
+    - family-names: Clopath
+      given-names: Claudia
+    - family-names: Gruber
+      given-names: Aaron
+    - family-names: Nicola
+      given-names: Wilten
+  journal: "Communications Biology"
+  year: 2026

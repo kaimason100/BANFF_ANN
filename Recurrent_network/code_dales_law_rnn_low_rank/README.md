@@ -1,8 +1,11 @@
 # Low-Rank Recurrent BANFF Experiments
 
 This folder contains the recurrent MATLAB implementation associated with the
-manuscript. The recurrent state is decoded through a fixed low-rank scaffold,
-and only task-specific neuronal bias currents are trained.
+Communications Biology article *Rapidly Reconfigurable Dynamic Computing in
+Neural Networks with Fixed Synaptic Connectivity*. The recurrent state is
+decoded through a fixed low-rank scaffold, and only task-specific neuronal bias
+currents are trained. Full author and citation details are in the repository
+README and `CITATION.cff`.
 
 ## Model
 
