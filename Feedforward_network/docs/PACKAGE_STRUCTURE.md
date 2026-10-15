@@ -52,9 +52,7 @@ The common seed list is `0:9` for all active workflows.
 
 Training scripts fit preprocessing statistics from training data only and save
 those statistics with the model artifact. Tests require the saved statistics and
-split metadata, then evaluate held-out test data only. Older artifacts that lack
-this metadata intentionally fail updated tests and should be regenerated with
-the matching active seeded training script.
+split metadata, then evaluate held-out test data only. 
 
 ## Reproducibility boundary
 
