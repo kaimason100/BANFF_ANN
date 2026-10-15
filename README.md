@@ -44,9 +44,7 @@ All explicit random seeds, dataset splits, and train-fitted preprocessing
 statistics are fixed. Exact bitwise equality across operating systems, MATLAB
 versions, CPUs, and GPUs is not guaranteed because floating-point kernels and
 adaptive ODE integration may differ. Long chaotic rollouts can amplify those
-small differences. Compare saved parameters directly when checking
-initialisation, and use aggregate task metrics from a controlled environment
-for publication comparisons.
+small differences. 
 
 ## Requirements
 
