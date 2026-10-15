@@ -95,4 +95,4 @@ data, so those stages must be completed before plotting.
 Keep the source revision, evaluated model files, test settings and outputs
 together. Fixed random seeds do not guarantee bitwise equality across MATLAB
 versions or hardware. Chaotic DS trajectories can amplify small numerical
-differences; compare aggregate metrics under a controlled environment.
+differences.
