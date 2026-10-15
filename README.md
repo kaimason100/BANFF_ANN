@@ -7,11 +7,11 @@ synaptic weights and learn task-specific neuronal biases.
 The repository has two independent packages:
 
 - `Feedforward_network` contains the seeded feedforward experiments for
-  classification, regression, autonomous dynamical systems, Pong, and
+  classification, regression, dynamical systems, Pong, and
   two-joint motor control.
 - `Recurrent_network` contains the low-rank recurrent experiments, including
   multisystem learning, bias switching, representational drift, and the
-  Dale-constrained network.
+  Dale-constrained low-rank recurrent network.
 
 Start with the README inside the package you intend to run. Feedforward users
 should then follow `Feedforward_network/docs/GETTING_STARTED.md` and
