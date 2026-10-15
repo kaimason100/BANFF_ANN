@@ -30,12 +30,6 @@ DS learning-rate exceptions and the MO0 continuation. Edit `TASKS` and `SEEDS`
 in that Live Script to select a subset. Existing files for those task/seed
 pairs are overwritten. This is substantial training, not a quick test.
 
-For a selected task and seed with the same publication schedule:
-
-```matlab
-banff.runPublication("Pong",9,true)
-```
-
 Task-specific Live Scripts are also available under `examples/classification`,
 `examples/regression`, `examples/control`, `examples/pong` and
 `examples/dynamical_systems`. Use the publication entry point when the exact
